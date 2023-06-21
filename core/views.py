@@ -20,26 +20,24 @@ from .utils import *
 
 
 
-# config = {
-#     "apiKey": "AIzaSyDhmSxzNJ28xPy1O8tsb28oSElHVqjqRn8",
-#     "authDomain": "socialmediatiny.firebaseapp.com",
-#     "projectId": "socialmediatiny",
-#     "storageBucket": "socialmediatiny.appspot.com",
-#     "messagingSenderId": "868327078831",
-#     "appId": "1:868327078831:web:c5c0d1693875307bcb4d5a",
-#     "measurementId": "G-7VZ5YK1BTY",
-#     "storageBucket": "socialmediatiny.appspot.com",
-#     "databaseURL": "https://socialmediatiny-default-rtdb.firebaseio.com/",
-# }
+config = {
+    "apiKey": "AIzaSyDhmSxzNJ28xPy1O8tsb28oSElHVqjqRn8",
+    "authDomain": "socialmediatiny.firebaseapp.com",
+    "projectId": "socialmediatiny",
+    "storageBucket": "socialmediatiny.appspot.com",
+    "messagingSenderId": "868327078831",
+    "appId": "1:868327078831:web:c5c0d1693875307bcb4d5a",
+    "measurementId": "G-7VZ5YK1BTY",
+    "storageBucket": "socialmediatiny.appspot.com",
+    "databaseURL": "https://socialmediatiny-default-rtdb.firebaseio.com/",
+}
 
-# firebase = pyrebase.initialize_app(config)
-# storage = firebase.storage()
+firebase = pyrebase.initialize_app(config)
+storage = firebase.storage()
 
-# from SocialMediaTiny import settings
-# from pathlib import Path
-# Create your views here.
 
-# 1 + i2.jpg 
+
+
 
 # class TestView(View):
 #     def get(self, request):
@@ -57,7 +55,9 @@ from .utils import *
 #         }) 
 
 
-class HomeView(View):
+class HomeView(LoginRequiredMixin, View):
+    login_url = 'signin'
+
     def get(self, request):
 
 
@@ -66,7 +66,9 @@ class HomeView(View):
         })
     
 
-class Logout(View):
+class Logout(LoginRequiredMixin, View):
+    login_url = 'signin'
+
     def get(self, request):
         auth.logout(request)
         return redirect('/signin/')
@@ -134,5 +136,38 @@ class RegisterView(APIView):
             return JsonResponse(errors)
 
 
+class Setting(LoginRequiredMixin, View):
+    login_url = 'signin'
+
+    def get(self, request):
+        profile = Profile.objects.get(user=request.user)
+        return render(request, 'setting.html', {
+            'profile': profile,
+        })
+
+    def post(self, request):
+        user_login = request.user
+        profile = Profile.objects.get(user=user_login)
+        image = request.FILES.get("profile_image")
+        data = request.POST.dict()
+        data['user'] = user_login.id
+
+        if image:
+            # Save image to FS
+            dest = f'media/profile_images/{profile.id}.jpg'
+            storage.child(dest).put(image) # Save to firebase storage
+            image_path = storage.child(dest).get_url(None) # Get url from firebase
+            data['image_path'] = image_path
+            
+        
+        
+        # Serializer
+
+        profile_serializer = ProfileSerializer(instance=profile, data=data)
+        if profile_serializer.is_valid():
+            profile_serializer.save()
+            return JsonResponse({'mess': 'OK'})
+        else:
+            return JsonResponse({'error': 'ER'})
             
         

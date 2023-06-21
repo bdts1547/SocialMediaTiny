@@ -23,7 +23,7 @@ class Profile(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4())
     about_me = models.TextField(blank=True)
     location = models.CharField(max_length=255, blank=True, null=True)
-    image_path = models.CharField(max_length=100000, default='media/profile_images/blank_profile.png')
+    image_path = models.CharField(max_length=100000, default='https://firebasestorage.googleapis.com/v0/b/socialmediatiny.appspot.com/o/media%2Fprofile_images%2Fblank_profile.png?alt=media&token=a7798e1c-3621-486e-b025-1befb1c0caf8')
     gender = models.CharField(max_length=1, default="M", choices=GENDER_CHOICE)
 
     def __str__(self) -> str:

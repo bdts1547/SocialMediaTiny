@@ -1,7 +1,7 @@
 "# SocialMediaTiny" 
 
 ## Note:
-
+gender setting render
 
 
 ##### How to write filter jinja2
@@ -75,6 +75,26 @@ def taskDelete(request, pk):
     task.delete()
     
     return Response("Deleted") # JSON data
+```
+
+
+##### Save image to firebase storage
+```
+import pyrebase
+config = {
+    ... # get from firebase
+}
+
+firebase = pyrebase.initialize_app(config)
+storage = firebase.storage()
+
+# Store image to Firebase
+image = 'path/to/image'
+dest = '/media/profile_iamges/i2.jpg'
+storage.child(dest).put(image) 
+
+# Get url
+storage.child('path/to/image/firebase').get_url(None)
 ```
 
 
