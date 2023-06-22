@@ -40,10 +40,10 @@ class HomeView(LoginRequiredMixin, View):
     login_url = 'signin'
 
     def get(self, request):
-
+        profile = Profile.objects.get(user=request.user)
 
         return render(request, 'home.html', {
-
+            'profile': profile,
         })
     
 
@@ -87,28 +87,21 @@ class RegisterView(APIView):
         is_succeed = True
         errors = check_error_accout(username, email, password, password2)
         if not errors: # Not error
-            # if User.objects.filter(username=username).exists():
-            #     messages.info(request, "Username Taken")
-            #     errors['username'] = "Username Taken"
-            #     is_succeed = False
-            # if User.objects.filter(email=email).exists():
-            #     messages.info(request, "Email Taken")
-            #     errors['email'] = "Email Taken"
-
-            #     is_succeed = False
-            
-            # if is_succeed:
-            #     # hashed_pass = make_password(password)
-            #     # new_user = User.objects.create(username=username, email=email, password=hashed_pass)
-            #     # new_user.save()
+          
             user_serializer = UserSerializer(data=request.data)
             if user_serializer.is_valid():
                 user_serializer.save() 
             
 
-            #     # Login 
-            # user_login = auth.authenticate(username=username, password=password)
-            # auth.login(request, user_login)
+            # Login 
+            user_login = auth.authenticate(username=username, password=password)
+            auth.login(request, user_login)
+
+
+            # Crete profile
+            
+            profile = Profile.objects.create(user=request.user)
+            profile.save()
 
 
 
@@ -122,17 +115,14 @@ class RegisterView(APIView):
 
 class Setting(LoginRequiredMixin, View):
     login_url = 'signin'
-    # redirect_field_name = 'next'
-
 
     def get(self, request):
-     
-        
         profile = Profile.objects.get(user=request.user)
         return render(request, 'setting.html', {
             'profile': profile,
         })
 
+    # update profile
     def post(self, request):
         user_login = request.user
         profile = Profile.objects.get(user=user_login)
@@ -149,8 +139,7 @@ class Setting(LoginRequiredMixin, View):
             
         
         
-        # Serializer
-
+        # Serializer update profile
         profile_serializer = ProfileSerializer(instance=profile, data=data)
         if profile_serializer.is_valid():
             profile_serializer.save()
@@ -158,4 +147,14 @@ class Setting(LoginRequiredMixin, View):
         else:
             return JsonResponse({'error': 'ER'})
             
-        
+
+class UploadPost(LoginRequiredMixin, View):
+    login_url = 'signin' 
+
+    def get(self, request):
+        return render(request, 'home.html')
+    
+    def post(self, request):
+        breakpoint()
+
+        return HttpResponse("OK")

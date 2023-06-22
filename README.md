@@ -1,7 +1,7 @@
 "# SocialMediaTiny" 
 
 ## Note:
-gender setting render
+
 
 
 ##### How to write filter jinja2

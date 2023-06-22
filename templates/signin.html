@@ -97,7 +97,9 @@
             formData.append('username', $('#username').val())
             formData.append('password', $('#password').val())
             formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val())
-            if ($('#redirect_next')) {
+            
+            console.log()
+            if ($('#redirect_next').val()) {
                 formData.append('redirect_next', $('#redirect_next').val())
             }
 

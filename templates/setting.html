@@ -78,17 +78,17 @@
                         <div>
                             <label for=""> Gender </label>
                             <select id="gender" name="gender" class="shadow-none bg-gray-100">
-                                {% if profile.gender == 'Male' %}
+                                {% if profile.gender == 'M' %}
                                     <option id="male" value="M" selected>Male</option>
                                 {% else %}
                                     <option id="male" value="M">Male</option>
                                 {% endif %}
-                                {% if profile.gender == 'Female' %}
+                                {% if profile.gender == 'F' %}
                                     <option id="female" value="F" selected>Female</option>
                                 {% else %}
                                     <option id="female" value="F">Female</option>
                                 {% endif %}
-                                {% if profile.gender == 'Female' %}
+                                {% if profile.gender == 'O' %}
                                     <option id="other" value="O" selected>Other</option>
                                 {% else %}
                                     <option id="other" value="O">Other</option>
@@ -99,7 +99,7 @@
                         </div>
                     </div>
                     <div class="bg-gray-10 p-6 pt-0 flex justify-end space-x-3">
-                        <button class="p-2 px-4 rounded bg-gray-50 text-red-500"> Cancel </button>
+                        <a class="p-2 px-4 rounded bg-gray-50 text-red-500" href="/"> Back </a>
                         <button type="submit" class="button bg-blue-700"> Save </button>
                     </div>
                 </form>
