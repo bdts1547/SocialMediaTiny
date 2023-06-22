@@ -68,10 +68,11 @@ class SignInView(View):
         user_login = auth.authenticate(username=username, password=password)
         if user_login is not None:
             auth.login(request, user_login)
-            return redirect(redirect_next)
+            # return redirect(redirect_next)
+            return JsonResponse({'redirect': redirect_next})
         else:
-            # return JsonResponse({'error': "Username or password wrong"})
-            return redirect('/signin/')
+            return JsonResponse({'error': "Username or password wrong"})
+            # return redirect('/signin/')
     
 
 class RegisterView(APIView):

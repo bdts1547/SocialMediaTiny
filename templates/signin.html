@@ -36,7 +36,7 @@
                         class="img-fluid" alt="Phone image">
                 </div>
                 <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
-                    <form id="form-login" action="/signin/" method="post">
+                    <form id="form-login">
                         {% csrf_token %}
                         <!-- Email input -->
                         <div class="form-outline mb-4">
@@ -50,7 +50,7 @@
                             <label class="form-label" for="form1Example23">Password</label>
                             <label for="password" id="error_account" style="color: red;"></label>
                             {% if request.GET.next %}
-                            <input type="hidden" name="redirect_next" value="{{request.GET.next}}">
+                            <input type="hidden" id="redirect_next" name="redirect_next" value="{{request.GET.next}}">
                             {% endif %}
                         </div>
 
@@ -89,21 +89,28 @@
         </div>
     </section>
 
-    <!-- <script>
+    <script>
         $(document).on("submit", "#form-login", function(e){
             e.preventDefault()
+
+            var formData = new FormData()
+            formData.append('username', $('#username').val())
+            formData.append('password', $('#password').val())
+            formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val())
+            if ($('#redirect_next')) {
+                formData.append('redirect_next', $('#redirect_next').val())
+            }
+
 
             $.ajax({
                 type: 'post',
                 url: '/signin/',
-                data: {
-                    username: $('#username').val(),
-                    password: $('#password').val(),
-                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-                },
+                processData: false,
+                contentType: false,
+                data: formData,
                 success: function(response){
                     if (response['redirect']) {
-                        window.location.assign('/')
+                        window.location.assign(response['redirect'])
                     }
                     else {
                         if (response['error']) {
@@ -121,7 +128,7 @@
                 }
             })
         })
-    </script> -->
+    </script>
 </body>
 
 </html>
