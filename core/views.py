@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from django.http import HttpResponse 
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -10,7 +9,6 @@ from django.http import JsonResponse, HttpResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from django.contrib import messages
 
 import pyrebase
 
@@ -38,23 +36,6 @@ storage = firebase.storage()
 
 
 
-
-# class TestView(View):
-#     def get(self, request):
-#         profiles = Profile.objects.all()
-#         url = profiles[0].image.url # /media/profile_iamges/i2.jpg
-      
-#         ss = str(settings.BASE_DIR) + str(Path(url))
- 
-#         storage.child(url).put(ss) # Store image to Firebase
-        
-#         link_url = storage.child(url).get_url(None) # Get url from firebase
-#         return render(request, 'test.html', {
-#             'profiles': profiles,
-#             'link': link_url,
-#         }) 
-
-
 class HomeView(LoginRequiredMixin, View):
     login_url = 'signin'
 
@@ -73,22 +54,24 @@ class Logout(LoginRequiredMixin, View):
         auth.logout(request)
         return redirect('/signin/')
 
+
 class SignInView(View):
+
     def get(self, request):
-
-
+        
         return render(request, 'signin.html')
     
     def post(self, request):
         username = request.POST['username']
         password = request.POST['password']
-
+        redirect_next = request.POST['redirect_next'] if 'redirect_next' in request.POST else '/'
         user_login = auth.authenticate(username=username, password=password)
         if user_login is not None:
             auth.login(request, user_login)
-            return JsonResponse({'redirect': '/'})
+            return redirect(redirect_next)
         else:
-            return JsonResponse({'error': "Username or password wrong"})
+            # return JsonResponse({'error': "Username or password wrong"})
+            return redirect('/signin/')
     
 
 class RegisterView(APIView):
@@ -138,8 +121,12 @@ class RegisterView(APIView):
 
 class Setting(LoginRequiredMixin, View):
     login_url = 'signin'
+    # redirect_field_name = 'next'
+
 
     def get(self, request):
+     
+        
         profile = Profile.objects.get(user=request.user)
         return render(request, 'setting.html', {
             'profile': profile,

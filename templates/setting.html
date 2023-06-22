@@ -78,10 +78,22 @@
                         <div>
                             <label for=""> Gender </label>
                             <select id="gender" name="gender" class="shadow-none bg-gray-100">
-                                
-                                <option id="male" value="M">Male</option>
-                                <option id="female" value="F">Female</option>
-                                <option id="other" value="O">Other</option>
+                                {% if profile.gender == 'Male' %}
+                                    <option id="male" value="M" selected>Male</option>
+                                {% else %}
+                                    <option id="male" value="M">Male</option>
+                                {% endif %}
+                                {% if profile.gender == 'Female' %}
+                                    <option id="female" value="F" selected>Female</option>
+                                {% else %}
+                                    <option id="female" value="F">Female</option>
+                                {% endif %}
+                                {% if profile.gender == 'Female' %}
+                                    <option id="other" value="O" selected>Other</option>
+                                {% else %}
+                                    <option id="other" value="O">Other</option>
+                                {% endif %}
+
 
                             </select>
                         </div>
