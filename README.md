@@ -15,7 +15,20 @@
             - this_filter.py
         - ...
 
-2. In file template {% load filter %}  
+2. In code
+```
+# file this_filter.py
+from django import template
+register = template.Library()
+
+@register.filter(name='zip')
+def zipFilter(x, value):
+    return zip(x, value)
+
+
+# file .html
+{% load this_filter %}
+``` 
 
 
 ##### Add url for media

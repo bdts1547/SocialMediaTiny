@@ -40,10 +40,30 @@ class HomeView(LoginRequiredMixin, View):
     login_url = 'signin'
 
     def get(self, request):
-        profile = Profile.objects.get(user=request.user)
+        profile_login = Profile.objects.get(user=request.user)
+        list_posts = Post.objects.all()
+        list_profiles, list_of_list_imagesPost = [], []
+        list_of_list_imagesComment, list_of_list_imagesLike = [], []
+        for post in list_posts:
+            profile = Profile.objects.get(user=post.user)
+            list_profiles.append(profile)
+            
+            list_image_post = ImagesOfPost.objects.filter(post=post)
+            list_of_list_imagesPost.append(list_image_post)
 
+            # list_image_like = ImagesOfPost.objects.filter(post=post)
+            # list_of_list_imagesLike.append(list_image_like)
+
+            # list_image_comment = ImagesOfPost.objects.filter(post=post)
+            # list_of_list_imagesComment.append(list_image_comment)
+            
+        zip_data = zip(list_posts, list_profiles, list_of_list_imagesPost)
         return render(request, 'home.html', {
-            'profile': profile,
+            'profile_login': profile_login,
+            'list_posts': list_posts,
+            'list_profiles': list_profiles,
+            'list_of_list_imagesPost': list_of_list_imagesPost,
+            'zip_data': zip_data,
         })
     
 
@@ -148,13 +168,47 @@ class Setting(LoginRequiredMixin, View):
             return JsonResponse({'error': 'ER'})
             
 
-class UploadPost(LoginRequiredMixin, View):
+class UploadPost(LoginRequiredMixin, APIView):
     login_url = 'signin' 
 
     def get(self, request):
         return render(request, 'home.html')
     
     def post(self, request):
-        breakpoint()
+        user_login = request.user
+        data = request.data.dict()
+        data['user'] = user_login.id
+        post_serializer = PostSerializer(data=data)
 
-        return HttpResponse("OK")
+        if post_serializer.is_valid():
+            post_serializer = post_serializer.save() # Save post to data
+
+            images = request.FILES.getlist('images[]')
+            if images:
+
+                for image in images:
+                    id = str(uuid.uuid4())
+                    dest = f'media/post_images/{id}.jpg'
+                    storage.child(dest).put(image) # Save to firebase storage
+                    image_path = storage.child(dest).get_url(None) # get url
+              
+                    # Create relationship post-image
+                    post = Post.objects.get(id=post_serializer.id)
+                    add_img = ImagesOfPost.objects.create(id=id, post=post, image_path=image_path)
+                    add_img.save()
+            
+            return JsonResponse({'data': ""})
+        
+            
+        assert False, post_serializer.errors
+        # return JsonResponse({'errors': post_serializer.errors})
+
+
+
+
+
+
+
+
+
+

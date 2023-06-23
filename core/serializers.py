@@ -22,3 +22,28 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = '__all__'
+
+
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = '__all__'
+
+
+class ImageOfPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImagesOfPost
+        fields = '__all__'
+
+
+class LikeOfPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LikeOfPost
+        fields = '__all__'
+
+
+    
+class CommentOfPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommentOfPost
+        fields = '__all__'

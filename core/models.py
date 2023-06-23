@@ -17,9 +17,9 @@ class Profile(models.Model):
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4())
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     about_me = models.TextField(blank=True, default="")
-    location = models.CharField(max_length=255, default="")
+    location = models.CharField(max_length=255, default="", blank=True)
     image_path = models.CharField(max_length=100000, default='https://firebasestorage.googleapis.com/v0/b/socialmediatiny.appspot.com/o/media%2Fprofile_images%2Fblank_profile.png?alt=media&token=a7798e1c-3621-486e-b025-1befb1c0caf8')
     university = models.CharField(max_length=255, blank=True, default="")
     gender = models.CharField(max_length=1, default="M", choices=GENDER_CHOICE)
@@ -29,9 +29,31 @@ class Profile(models.Model):
   
 
 class Post(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=1000, default="")
     created_at = models.DateTimeField(auto_now_add=True)
-    
+    no_of_likes = models.IntegerField(default=0)
+
+    def __str__(self) -> str:
+        return self.title
+
+
+class ImagesOfPost(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    image_path = models.CharField(max_length=100000, default="")
+
+class LikeOfPost(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class CommentOfPost(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     
 
 
