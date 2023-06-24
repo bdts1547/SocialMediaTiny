@@ -55,48 +55,60 @@
                             <label for=""> Email</label>
                             <input id="email" name="email" type="text" placeholder="" class="shadow-none bg-gray-100">
                         </div> -->
-                        <div class="col-span-2">
-                            <label for="about">Profile image</label>
-                            <img src="{{profile.image_path}}" alt="" width="100" height="100">
-                            <input type="file" name="profile_image" id="profile_image">
+                        <div class="col-span-2" style="display: flex;">
+                            <div class="image-profile" style="width: 33%; display:flex; flex-direction:column">
+
+                                <label for="about">Profile image</label>
+                                <div id="showImg">
+                                    <img src="{{profile.image_path}}" alt="" width="150" height="100">
+                                </div>
+                                <input type="file" name="profile_image" id="profile_image" accept="image/*" 
+                                style="display: none;" onchange="selectImage(event)">
+                                <button type="button" style="background-color: #be185d; color:white; padding: 4px; width: 150px;
+                                    margin-top: 4px; border-radius: 4px;" onclick="document.getElementById('profile_image').click()">
+                                    Upload image
+                                </button>
+                            </div>
+                            <div style="width: 67%;">
+                                <label for=""> Location</label>
+                                <input type="text" id="location" name="location" placeholder="" style="width: 100%;"
+                                    class="shadow-none bg-gray-100" value="{{profile.location}}">
+                                    <div style="margin-top: 8px;">
+                                        <label for=""> University</label>
+                                        <input type="text" id="university" name="university" placeholder=""
+                                            class="shadow-none bg-gray-100" value="{{profile.university}}">
+                                    </div>
+                                    <div style="margin-top: 8px;">
+                                        <label for=""> Gender </label>
+                                        <select id="gender" name="gender" class="shadow-none bg-gray-100" style="width: 25%; text-align: center;">
+                                            {% if profile.gender == 'M' %}
+                                                <option id="male" value="M" selected>Male</option>
+                                            {% else %}
+                                                <option id="male" value="M">Male</option>
+                                            {% endif %}
+                                            {% if profile.gender == 'F' %}
+                                                <option id="female" value="F" selected>Female</option>
+                                            {% else %}
+                                                <option id="female" value="F">Female</option>
+                                            {% endif %}
+                                            {% if profile.gender == 'O' %}
+                                                <option id="other" value="O" selected>Other</option>
+                                            {% else %}
+                                                <option id="other" value="O">Other</option>
+                                            {% endif %}
+            
+            
+                                        </select>
+                                    </div>
+                            </div>
                         </div>
                         <div class="col-span-2">
                             <label for="about">About me</label>
                             <textarea id="about_me" id="about_me" name="about_me" rows="3"
                                 class="shadow-none bg-gray-100">{{profile.about_me}}</textarea>
                         </div>
-                        <div class="col-span-2">
-                            <label for=""> Location</label>
-                            <input type="text" id="location" name="location" placeholder=""
-                                class="shadow-none bg-gray-100" value="{{profile.location}}">
-                        </div>
-                        <div>
-                            <label for=""> University</label>
-                            <input type="text" id="university" name="university" placeholder=""
-                                class="shadow-none bg-gray-100" value="{{profile.university}}">
-                        </div>
-                        <div>
-                            <label for=""> Gender </label>
-                            <select id="gender" name="gender" class="shadow-none bg-gray-100">
-                                {% if profile.gender == 'M' %}
-                                    <option id="male" value="M" selected>Male</option>
-                                {% else %}
-                                    <option id="male" value="M">Male</option>
-                                {% endif %}
-                                {% if profile.gender == 'F' %}
-                                    <option id="female" value="F" selected>Female</option>
-                                {% else %}
-                                    <option id="female" value="F">Female</option>
-                                {% endif %}
-                                {% if profile.gender == 'O' %}
-                                    <option id="other" value="O" selected>Other</option>
-                                {% else %}
-                                    <option id="other" value="O">Other</option>
-                                {% endif %}
-
-
-                            </select>
-                        </div>
+                        
+                       
                     </div>
                     <div class="bg-gray-10 p-6 pt-0 flex justify-end space-x-3">
                         <a class="p-2 px-4 rounded bg-gray-50 text-red-500" href="/"> Back </a>
@@ -189,12 +201,22 @@
     <script src="{% static '../../unpkg.com/ionicons%405.2.3/dist/ionicons.js' %}"></script>
 
     <script>
+        function selectImage(event) {
+            const file = event.target.files[0];
+            const showImg = document.getElementById('showImg');
+            showImg.innerHTML = `<img src="${URL.createObjectURL(file)}" alt="" width="150" height="100">`;
+       
+        }
+
+
+        // Submit AJAX
         $(document).on('submit', '#form-setting', function (e) {
             e.preventDefault()
 
             var formData = new FormData();
             formData.append('profile_image', $('#profile_image')[0].files[0])
             formData.append('about_me', $('#about_me').val())
+            formData.append('location', $('#location').val())
             formData.append('university', $('#university').val())
             formData.append('gender', $('#gender').val())
             formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val())
@@ -206,7 +228,8 @@
                 contentType: false,
                 data: formData,
                 success: function(res) {
-                    console.log(res)
+                    console.log(res['redirect'])
+                    window.location.assign(res['redirect'])
                 },
                 error: function(){
                     alert("ER")

@@ -1,8 +1,10 @@
 "# SocialMediaTiny" 
 
-## Note:
-
-
+## Todo:
+show after upload ajax
+comment
+like
+test
 
 ##### How to write filter jinja2
 1. Create folder 'templatetags' and 'your filters' in your app 

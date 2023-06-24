@@ -10,6 +10,8 @@ urlpatterns = [
     path('logout/', Logout.as_view(), name='logout'),
     path('setting/', Setting.as_view(), name='setting'),
     path('upload_post/', UploadPost.as_view(), name='upload_post'),
+    path('like_post/', LikePost.as_view(), name='like_post'),
+    path('comment_post/', CommentPost.as_view(), name='comment_post'),
 
 
 ]

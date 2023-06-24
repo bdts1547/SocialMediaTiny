@@ -41,18 +41,20 @@ class Post(models.Model):
 
 class ImagesOfPost(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')
     image_path = models.CharField(max_length=100000, default="")
+
+
 
 class LikeOfPost(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class CommentOfPost(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     
 

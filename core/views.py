@@ -60,9 +60,6 @@ class HomeView(LoginRequiredMixin, View):
         zip_data = zip(list_posts, list_profiles, list_of_list_imagesPost)
         return render(request, 'home.html', {
             'profile_login': profile_login,
-            'list_posts': list_posts,
-            'list_profiles': list_profiles,
-            'list_of_list_imagesPost': list_of_list_imagesPost,
             'zip_data': zip_data,
         })
     
@@ -163,7 +160,7 @@ class Setting(LoginRequiredMixin, View):
         profile_serializer = ProfileSerializer(instance=profile, data=data)
         if profile_serializer.is_valid():
             profile_serializer.save()
-            return JsonResponse({'mess': 'OK'})
+            return JsonResponse({'redirect': '/setting/'})
         else:
             return JsonResponse({'error': 'ER'})
             
@@ -179,13 +176,10 @@ class UploadPost(LoginRequiredMixin, APIView):
         data = request.data.dict()
         data['user'] = user_login.id
         post_serializer = PostSerializer(data=data)
-
         if post_serializer.is_valid():
-            post_serializer = post_serializer.save() # Save post to data
-
+            post = post_serializer.save() # Save post to data
             images = request.FILES.getlist('images[]')
             if images:
-
                 for image in images:
                     id = str(uuid.uuid4())
                     dest = f'media/post_images/{id}.jpg'
@@ -193,20 +187,47 @@ class UploadPost(LoginRequiredMixin, APIView):
                     image_path = storage.child(dest).get_url(None) # get url
               
                     # Create relationship post-image
-                    post = Post.objects.get(id=post_serializer.id)
+           
                     add_img = ImagesOfPost.objects.create(id=id, post=post, image_path=image_path)
                     add_img.save()
-            
-            return JsonResponse({'data': ""})
+
+
+            post_updated = Post.objects.get(id=post.id)
+            path_images = [image.image_path for image in post_updated.images.all()]
+            # breakpoint()
+            return JsonResponse({'post': post})
         
             
         assert False, post_serializer.errors
         # return JsonResponse({'errors': post_serializer.errors})
 
 
+class LikePost(LoginRequiredMixin, View):
+    def get(self, request):
+        user_login = request.user
+        id_post = request.GET['id_post']
+        post = Post.objects.get(id=id_post)
+        is_liked = True
+        try:
+            liked = LikeOfPost.objects.get(user=user_login, post=post)
+            is_liked = False
+            liked.delete()
+        except:
+            new_like = LikeOfPost.objects.create(user=user_login, post=post)
+            new_like.save()
 
 
+        # breakpoint()
 
+        return JsonResponse({
+            'is_liked': is_liked,
+            'id_post': id_post,
+            })
+
+
+class CommentPost(LoginRequiredMixin, View):
+    def get(self, request):
+        pass
 
 
 

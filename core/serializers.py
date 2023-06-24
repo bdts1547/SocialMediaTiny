@@ -9,11 +9,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'password', 'email')
 
-    def create(self, validatee_data):
+    def create(self, validated_data):
         user = User.objects.create_user(
-            username=validatee_data['username'],
-            password=validatee_data['password'],
-            email=validatee_data['email']
+            username=validated_data['username'],
+            password=validated_data['password'],
+            email=validated_data['email']
         )
         return user
 
@@ -27,8 +27,15 @@ class ProfileSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = '__all__'
+        fields = ['id', 'user', 'title', 'created_at', 'no_of_likes', 'images', 'likes', 'comments']
+        extra_kwargs = {
+            'images': {'required': False},
+            'likes': {'required': False},
+            'comments': {'required': False},
+        }
 
+ 
+  
 
 class ImageOfPostSerializer(serializers.ModelSerializer):
     class Meta:
