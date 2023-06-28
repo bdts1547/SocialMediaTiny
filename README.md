@@ -2,8 +2,7 @@
 
 ## Todo:
 show after upload ajax
-comment
-like
+show popup comment like
 test
 
 ##### How to write filter jinja2

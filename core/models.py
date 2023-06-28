@@ -16,7 +16,7 @@ class Profile(models.Model):
         ('O', 'Other'),
     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     about_me = models.TextField(blank=True, default="")
     location = models.CharField(max_length=255, default="", blank=True)
@@ -34,6 +34,7 @@ class Post(models.Model):
     title = models.CharField(max_length=1000, default="")
     created_at = models.DateTimeField(auto_now_add=True)
     no_of_likes = models.IntegerField(default=0)
+    no_of_comments = models.IntegerField(default=0)
 
     def __str__(self) -> str:
         return self.title
@@ -54,6 +55,7 @@ class LikeOfPost(models.Model):
 
 class CommentOfPost(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    comment = models.CharField(max_length=10000, null=True, blank=False)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     

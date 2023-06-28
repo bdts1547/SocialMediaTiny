@@ -42,22 +42,27 @@ class HomeView(LoginRequiredMixin, View):
     def get(self, request):
         profile_login = Profile.objects.get(user=request.user)
         list_posts = Post.objects.all()
-        list_profiles, list_of_list_imagesPost = [], []
-        list_of_list_imagesComment, list_of_list_imagesLike = [], []
+        list_profiles, list_images = [], []
+        list_comments, list_user_likes = [], []
         for post in list_posts:
+            # Profile of host post
             profile = Profile.objects.get(user=post.user)
             list_profiles.append(profile)
             
+            # List images of posts
             list_image_post = ImagesOfPost.objects.filter(post=post)
-            list_of_list_imagesPost.append(list_image_post)
+            list_images.append(list_image_post)
 
-            # list_image_like = ImagesOfPost.objects.filter(post=post)
-            # list_of_list_imagesLike.append(list_image_like)
+            # List user-like of posts
+            # list_no_like_post = LikeOfPost.objects.filter(post=post)
+            user_liked_post = True if LikeOfPost.objects.filter(post=post, user=request.user).exists() else False
+            list_user_likes.append(user_liked_post)
 
-            # list_image_comment = ImagesOfPost.objects.filter(post=post)
-            # list_of_list_imagesComment.append(list_image_comment)
-            
-        zip_data = zip(list_posts, list_profiles, list_of_list_imagesPost)
+            # List profile-comments of posts
+            list_comment_post = CommentOfPost.objects.filter(post=post)
+            list_comments.append(list_comment_post)
+        
+        zip_data = zip(list_posts, list_profiles, list_images, list_comments, list_user_likes)
         return render(request, 'home.html', {
             'profile_login': profile_login,
             'zip_data': zip_data,
@@ -146,21 +151,19 @@ class Setting(LoginRequiredMixin, View):
         image = request.FILES.get("profile_image")
         data = request.POST.dict()
         data['user'] = user_login.id
-
         if image:
             # Save image to FS
             dest = f'media/profile_images/{profile.id}.jpg'
             storage.child(dest).put(image) # Save to firebase storage
             image_path = storage.child(dest).get_url(None) # Get url from firebase
             data['image_path'] = image_path
-            
         
         
         # Serializer update profile
         profile_serializer = ProfileSerializer(instance=profile, data=data)
         if profile_serializer.is_valid():
             profile_serializer.save()
-            return JsonResponse({'redirect': '/setting/'})
+            return JsonResponse({'redirect': '/setting'})
         else:
             return JsonResponse({'error': 'ER'})
             
@@ -212,12 +215,15 @@ class LikePost(LoginRequiredMixin, View):
             liked = LikeOfPost.objects.get(user=user_login, post=post)
             is_liked = False
             liked.delete()
+
+            post.no_of_likes -= 1
+            post.save()
         except:
             new_like = LikeOfPost.objects.create(user=user_login, post=post)
             new_like.save()
 
-
-        # breakpoint()
+            post.no_of_likes += 1
+            post.save()
 
         return JsonResponse({
             'is_liked': is_liked,
@@ -226,8 +232,25 @@ class LikePost(LoginRequiredMixin, View):
 
 
 class CommentPost(LoginRequiredMixin, View):
-    def get(self, request):
-        pass
+    login_url = 'signin'
+
+    def post(self, request):
+        id_post = request.POST['id_post_comment']
+        comment = request.POST['comment']
+        user_login = request.user
+        post = Post.objects.get(id=id_post)
+        
+        new_comment = CommentOfPost.objects.create(post=post, user=user_login, comment=comment)
+        new_comment.save()
+
+        post.no_of_comments += 1
+        post.save()
+
+        return JsonResponse({
+            'comment': comment,
+            'username': user_login.username, 
+            'image_path': user_login.profile.image_path,
+            })
 
 
 
