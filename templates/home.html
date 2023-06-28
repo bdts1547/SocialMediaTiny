@@ -16,12 +16,11 @@
     <link rel="stylesheet" href="{% static 'assets/css/uikit.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/tailwind.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css'%}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
-        .btn-post:hover {
-            cursor: pointer;
-            opacity: 0.8;
-        }
+        
     </style>
 
 
@@ -350,7 +349,7 @@
                                         {% endif %}
                                     </div>
                                 </a>
-                                <a href="#" style="margin-left: 8px; margin-top:4px;">
+                                <a class="show-likes" id="{{post.id}}" style="margin-left: 8px; margin-top:4px;">
                                     <span class="numberOfLikes">{{post.no_of_likes}}</span> <strong>Liked</strong>
                                 </a>
                             </div>
@@ -688,8 +687,8 @@
     </div>
 
 
-
-    <div class="modal"></div>
+    {% include 'homepart/modal.html' %}
+ 
 
 
 
@@ -708,7 +707,6 @@
 
     <script type="text/javascript">
         var listImage = [];
-
 
         function selectImageToUpload() {
             var btn = document.getElementById('images')
@@ -880,6 +878,42 @@
             });
         })
 
+        $(document).on('click', '.show-likes', function(e){
+            e.preventDefault();
+
+            var root = e.target;
+            while (root.className !== 'show-likes') {
+                root = root.parentNode;
+            }
+        
+            $.ajax({
+                type: 'get',
+                url: `/show_likes/${root.id}`,
+                data: {
+
+                },
+                success: function(res) {
+                    var modalHTML = "";
+                    for (const user of res['data']) {
+                        modalHTML += `
+                        <div class="user">
+                            <a href="#" class="user-profile">
+                                <img src="${user['image_path']}" alt="" class="rounded-md w-full lg:h-76 object-cover">
+                                <p>${user['username']}</p> 
+                            </a>
+                            <button type="submit" class="button bg-blue-700"> ${user['is_followed']} </button>
+                        </div>
+                        `  
+                    };
+                    document.getElementById('js-show-user-like').innerHTML = modalHTML
+                    const modalLike = document.getElementById('modal-like');
+                    modalLike.style.display = 'flex';
+                },
+                error: function() {
+                    alert("ERR")
+                }
+            });
+        })
     </script>
 </body>
 

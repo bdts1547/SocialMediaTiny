@@ -66,6 +66,7 @@ class HomeView(LoginRequiredMixin, View):
         return render(request, 'home.html', {
             'profile_login': profile_login,
             'zip_data': zip_data,
+            'test': 'test',
         })
     
 
@@ -253,6 +254,39 @@ class CommentPost(LoginRequiredMixin, View):
             })
 
 
+class ShowLikePost(LoginRequiredMixin, View):
+    login_url = 'signin'
+
+    def get(self, request, id):
+        post = Post.objects.get(id=id)
+        likes = LikeOfPost.objects.filter(post=post)
+        data = []
+        for like in likes:
+            data.append({
+                'username': like.user.username,
+                'image_path': like.user.profile.image_path,
+                'is_followed': False,
+            })
+
+        # username, image_path, follower
+        return JsonResponse({
+            'data': data,
+        })
+    
+
+
+
+
+
+
+class Test(LoginRequiredMixin, View):
+    login_url = 'signin'
+
+    def get(self, request):
+        breakpoint()
+
+    def post(self, request):
+        breakpoint()
 
 
 

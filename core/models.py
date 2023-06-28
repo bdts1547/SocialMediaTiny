@@ -50,7 +50,7 @@ class ImagesOfPost(models.Model):
 class LikeOfPost(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='users')
 
 
 class CommentOfPost(models.Model):

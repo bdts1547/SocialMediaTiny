@@ -1,0 +1,75 @@
+.btn-post:hover {
+    cursor: pointer;
+    opacity: 0.9;
+}
+
+
+#modal-like {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.3);
+}
+
+.modal-container {
+    background-color: white;
+    width: 400px;
+    max-width: calc(100% - 32px);
+    max-height: 400px;
+    border-radius: 5px;
+}
+
+.modal-header {
+    justify-content: space-between;
+    margin-left: 16px;
+    margin-right: 16px;
+    font-size: 24px;
+}
+
+.close-icon {
+    padding: 8px;
+}
+
+.close-icon:hover {
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.user {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 16px;
+    margin-right: 16px;
+    padding: 8px 0px;
+}
+
+.user-profile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.user-profile p {
+    margin-left: 8px;
+}
+
+.user img {
+    width: 40px;
+    height: 40px;
+}
+
+
+
+
+
+
+.show-likes:hover {
+    cursor: pointer;
+}
