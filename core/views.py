@@ -2,9 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth.models import User
 from django.contrib import auth
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.http import JsonResponse, HttpResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -107,8 +106,8 @@ class RegisterView(APIView):
         email = request.POST['email']
         password = request.POST['password']
         password2 = request.POST['password2']
-        is_succeed = True
         errors = check_error_accout(username, email, password, password2)
+
         if not errors: # Not error
           
             user_serializer = UserSerializer(data=request.data)
@@ -210,24 +209,20 @@ class UploadPost(LoginRequiredMixin, APIView):
 
 class DeletePost(LoginRequiredMixin, View):
     login_url = 'signin'
-
-    def get(self, request):
-        return HttpResponse('OK')
-
+ 
 
     def post(self, request):
         id_post = request.POST['id_post']
-        post = Post.objects.filter(id=id_post, user=request.user).first()
-
-        if post:
+        post = Post.objects.filter(id=id_post).first()
+    
+        if post and (post.user == request.user or request.user.has_perm('core.delete_post')):
             post.delete()
+            return JsonResponse({'is_deleted': True})
         else:
-            pass
+            assert False, "No post to delete"
+            return JsonResponse({'is_deleted': False})
 
-        return JsonResponse({
-            'message': 'OK',
 
-        })
 class LikePost(LoginRequiredMixin, View):
     def get(self, request):
         user_login = request.user

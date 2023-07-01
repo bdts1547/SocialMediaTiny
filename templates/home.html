@@ -155,6 +155,7 @@
                                         <li>
                                             <hr class="-mx-2 my-2 ">
                                         </li>
+                                        {% if user == post.user or perms.core.delete_post %}
                                         <li>
                                             <a
                                                 class="delete_post flex items-center px-3 py-2 text-red-500 hover:bg-red-100 hover:text-red-500 rounded-md ">
@@ -163,6 +164,15 @@
                                                 </i> Delete
                                             </a>
                                         </li>
+                                        {% endif %}
+                                        <!-- <li>
+                                            <a
+                                                class="delete_post flex items-center px-3 py-2 text-red-500 hover:bg-red-100 hover:text-red-500 rounded-md ">
+                                                <i class="uil-trash-alt mr-1">
+                                                    <input type="hidden" name="delete_post" value="{{post.id}}">
+                                                </i> Hide Post
+                                            </a>
+                                        </li> -->
                                     </ul>
 
                                 </div>
@@ -694,7 +704,7 @@
 
         })
 
-        // Like not refresh
+        // Like
         $(document).on('click', '.like_post', function (event) {
             event.preventDefault()
             var rootElement = event.target;
@@ -733,7 +743,7 @@
             })
         })
 
-        // Submit comment
+        // comment
         $(document).on('submit', '.form-comment-post', function (e) {
             e.preventDefault();
             const form = e.target;
@@ -821,8 +831,6 @@
             e.preventDefault();
             const id_post =  e.target.querySelector('input[name="delete_post"]').value;
           
-       
-
             $.ajax({
                 type: 'post',
                 url: '/delete_post/',
@@ -831,11 +839,13 @@
                     'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
                 },
                 success: function (res) {
-                    alert('OK');
-                    document.getElementById(`${id_post}`).style.display = 'none';
+                    alert('OK')
+                    if (res['is_deleted']) {
+                        document.getElementById(`${id_post}`).style.display = 'none';
+                    }
                 },
                 error: function (res) {
-                    alert('ERROR');
+                    alert("You don't have permission to detele");
                 }
             });
 

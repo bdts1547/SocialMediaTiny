@@ -112,7 +112,28 @@ storage.child('path/to/image/firebase').get_url(None)
 ```
 
 
+##### Create Group & add User to Group
+```
+from django.contrib.auth.models import Group, Permission, User
+from django.contrib.contenttypes.models import ContentType
 
+# Create the group 
+mod, created = Group.objects.get_or_create(name='mod')
+ct = ContentType.objects.get_for_model(model=Post)
+perms = Permission.objects.filter(content_type=ct)
+
+# Add permissions to the mod group
+mod.permissions.add(*perms)
+# Add user to the group
+user = User.objects.get(username='dang')
+mod.user_set.add(user)
+
+
+# views.py
+class Home(PermissionRequiredMixin, View):
+permission_required = ['core.add_post']
+...
+```
 
 
 
