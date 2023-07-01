@@ -73,3 +73,12 @@
 .show-likes:hover {
     cursor: pointer;
 }
+
+.comments {
+    margin-bottom: 8px;
+}
+
+.form-comment-post {
+    margin-top: 8px;
+}
+

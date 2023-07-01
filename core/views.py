@@ -236,16 +236,18 @@ class CommentPost(LoginRequiredMixin, View):
     login_url = 'signin'
 
     def post(self, request):
-        id_post = request.POST['id_post_comment']
+        id_post = request.POST['id_post']
         comment = request.POST['comment']
         user_login = request.user
         post = Post.objects.get(id=id_post)
+        # breakpoint()
         
         new_comment = CommentOfPost.objects.create(post=post, user=user_login, comment=comment)
         new_comment.save()
 
         post.no_of_comments += 1
         post.save()
+
 
         return JsonResponse({
             'comment': comment,

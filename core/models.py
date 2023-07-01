@@ -58,6 +58,9 @@ class CommentOfPost(models.Model):
     comment = models.CharField(max_length=10000, null=True, blank=False)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return self.user.username + " " + self.comment
     
 
 

@@ -19,10 +19,6 @@
     <link rel="stylesheet" href="{% static 'css/home.css'%}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <style>
-        
-    </style>
-
 
 </head>
 
@@ -373,6 +369,7 @@
                             </div>
 
                         </div>
+                        <hr>
                         <!-- <div class="flex items-center space-x-3">
                             <div class="flex items-center">
                                 <img src="{% static 'assets/images/avatars/avatar-1.jpg' %}" alt=""
@@ -389,40 +386,42 @@
                         </div> -->
 
                         <!-- Comments -->
-                        <div id="comment_container" class="border-t pt-4 space-y-4 "
-                            style="max-height: 250px; overflow-y:scroll">
-                            {% for comment in comments reversed %}
-
-                            <div class="flex">
-                                <a href="#" class="w-10 h-10 rounded-full relative flex-shrink-0">
-                                    <img src="{{comment.user.profile.image_path}}" alt=""
-                                        class="absolute h-full rounded-full w-full">
-                                </a>
-                                <div
-                                    class="text-gray-700 py-2 px-3 rounded-md bg-gray-100 h-full relative lg:ml-5 ml-2 lg:mr-20   ">
-                                    <p><b>{{comment.user.username}}</b></p>
-                                    <p class="leading-6">{{comment.comment}} </p>
-                                    <div class="absolute w-3 h-3 top-3 -left-1 bg-gray-100 transform rotate-45 "></div>
+                        <div class="comment_container" class="border-t pt-4 space-y-4 ">
+                            <div class="comments" style="max-height: 250px; overflow-y:scroll;">
+                                {% for comment in comments reversed %}
+                                <div class="flex">
+                                    <a href="#" class="w-10 h-10 rounded-full relative flex-shrink-0">
+                                        <img src="{{comment.user.profile.image_path}}" alt=""
+                                            class="absolute h-full rounded-full w-full">
+                                    </a>
+                                    <div
+                                        class="text-gray-700 py-2 px-3 rounded-md bg-gray-100 h-full relative lg:ml-5 ml-2 lg:mr-20   ">
+                                        <p><b>{{comment.user.username}}</b></p>
+                                        <p class="leading-6">{{comment.comment}} </p>
+                                        <div class="absolute w-3 h-3 top-3 -left-1 bg-gray-100 transform rotate-45 ">
+                                        </div>
+                                    </div>
                                 </div>
+                                {% endfor %}
                             </div>
-                            {% endfor %}
 
-
+                            <hr>
+                            <!-- Input comment -->
+                            <form class="form-comment-post" action="">
+                                {% csrf_token %}
+                                <div class="bg-gray-100 bg-gray-100 rounded-full rounded-md relative ">
+                                    <input type="hidden" name="id_post" value="{{post.id}}">
+                                    <input required name="comment" type="text" placeholder="Enter comment"
+                                        class="bg-transparent max-h-10 shadow-none">
+                                    <div
+                                        class="absolute bottom-0 flex h-full items-center right-0 right-3 text-xl space-x-2">
+                                        <a href="#"> <i class="uil-image"></i></a>
+                                        <a href="#"> <i class="uil-video"></i></a>
+                                    </div>
+                                </div>
+                                <button type="submit" value=""></button>
+                            </form>
                         </div>
-                        <form id="form-comment-post" action="">
-                            {% csrf_token %}
-                            <div class="bg-gray-100 bg-gray-100 rounded-full rounded-md relative ">
-                                <input type="hidden" id="id_post_comment" value="{{post.id}}">
-                                <input id="comment" required name="comment" type="text" placeholder="Enter comment"
-                                    class="bg-transparent max-h-10 shadow-none">
-                                <div
-                                    class="absolute bottom-0 flex h-full items-center right-0 right-3 text-xl space-x-2">
-                                    <a href="#"> <i class="uil-image"></i></a>
-                                    <a href="#"> <i class="uil-video"></i></a>
-                                </div>
-                            </div>
-                            <button type="submit" value=""></button>
-                        </form>
 
                     </div>
 
@@ -688,7 +687,7 @@
 
 
     {% include 'homepart/modal.html' %}
- 
+
 
 
 
@@ -839,14 +838,14 @@
         })
 
         // Submit comment
-        $(document).on('submit', '#form-comment-post', function (e) {
+        $(document).on('submit', '.form-comment-post', function (e) {
             e.preventDefault();
+            const form = e.target;
 
             var formData = new FormData();
-            formData.append('comment', $('#comment').val());
-            formData.append('id_post_comment', $('#id_post_comment').val());
-            formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
-
+            formData.append('comment', form.querySelector('input[name=comment]').value);
+            formData.append('id_post', form.querySelector('input[name=id_post]').value);
+            formData.append('csrfmiddlewaretoken', form.querySelector('input[name=csrfmiddlewaretoken]').value);
 
             $.ajax({
                 type: 'post',
@@ -855,7 +854,9 @@
                 contentType: false,
                 data: formData,
                 success: function (res) {
-                    const commentContaierEle = document.getElementById('comment_container');
+                    const commentContainer = form.parentNode;
+                    const comments = commentContainer.querySelector('.comments');
+                    
                     var newComment = `
                     <div class="flex">
                         <a href="#" class="w-10 h-10 rounded-full relative flex-shrink-0">
@@ -869,8 +870,9 @@
                         </div>
                     </div>
                     `
-                    commentContaierEle.innerHTML = newComment + commentContaierEle.innerHTML;
-                    document.getElementById('form-comment-post').reset();
+
+                    comments.innerHTML = newComment + comments.innerHTML;
+                    document.querySelector('.form-comment-post').reset();
                 },
                 error: function () {
                     alert('ER')
@@ -878,21 +880,21 @@
             });
         })
 
-        $(document).on('click', '.show-likes', function(e){
+        $(document).on('click', '.show-likes', function (e) {
             e.preventDefault();
 
             var root = e.target;
             while (root.className !== 'show-likes') {
                 root = root.parentNode;
             }
-        
+
             $.ajax({
                 type: 'get',
                 url: `/show_likes/${root.id}`,
                 data: {
 
                 },
-                success: function(res) {
+                success: function (res) {
                     var modalHTML = "";
                     for (const user of res['data']) {
                         modalHTML += `
@@ -903,13 +905,13 @@
                             </a>
                             <button type="submit" class="button bg-blue-700"> ${user['is_followed']} </button>
                         </div>
-                        `  
+                        `
                     };
                     document.getElementById('js-show-user-like').innerHTML = modalHTML
                     const modalLike = document.getElementById('modal-like');
                     modalLike.style.display = 'flex';
                 },
-                error: function() {
+                error: function () {
                     alert("ERR")
                 }
             });
