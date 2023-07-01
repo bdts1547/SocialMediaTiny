@@ -180,6 +180,7 @@ class UploadPost(LoginRequiredMixin, APIView):
         data = request.data.dict()
         data['user'] = user_login.id
         post_serializer = PostSerializer(data=data)
+       
         if post_serializer.is_valid():
             post = post_serializer.save() # Save post to data
             images = request.FILES.getlist('images[]')
@@ -197,15 +198,36 @@ class UploadPost(LoginRequiredMixin, APIView):
 
 
             post_updated = Post.objects.get(id=post.id)
+            post_json = PostSerializer(post_updated).data
             path_images = [image.image_path for image in post_updated.images.all()]
             # breakpoint()
-            return JsonResponse({'post': post})
+            return JsonResponse(post_json)
         
             
         assert False, post_serializer.errors
         # return JsonResponse({'errors': post_serializer.errors})
 
 
+class DeletePost(LoginRequiredMixin, View):
+    login_url = 'signin'
+
+    def get(self, request):
+        return HttpResponse('OK')
+
+
+    def post(self, request):
+        id_post = request.POST['id_post']
+        post = Post.objects.filter(id=id_post, user=request.user).first()
+
+        if post:
+            post.delete()
+        else:
+            pass
+
+        return JsonResponse({
+            'message': 'OK',
+
+        })
 class LikePost(LoginRequiredMixin, View):
     def get(self, request):
         user_login = request.user
@@ -288,7 +310,6 @@ class Test(LoginRequiredMixin, View):
         breakpoint()
 
     def post(self, request):
-        breakpoint()
-
+        pass
 
 

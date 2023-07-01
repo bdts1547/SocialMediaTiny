@@ -66,19 +66,34 @@
 }
 
 
-
-
-
-
 .show-likes:hover {
     cursor: pointer;
 }
 
 .comments {
     margin-bottom: 8px;
+    max-height: 250px; 
+    overflow-y:scroll;
+}
+
+.comment {
+    margin-bottom: 8px;
 }
 
 .form-comment-post {
     margin-top: 8px;
 }
+
+
+
+
+
+.post-title {
+    padding: 8px 32px;
+    color:black; 
+    font-weight: 400;
+}
+
+
+
 
