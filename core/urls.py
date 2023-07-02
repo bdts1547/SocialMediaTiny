@@ -14,6 +14,9 @@ urlpatterns = [
     path('like_post/', LikePost.as_view(), name='like_post'),
     path('comment_post/', CommentPost.as_view(), name='comment_post'),
     path('show_likes/<str:id>', ShowLikePost.as_view(), name='show_likes'),
+    path('ban_user/', BanUser.as_view(), name='ban_user'),
+
+
     path('test/', Test.as_view(), name='test'),
 
 

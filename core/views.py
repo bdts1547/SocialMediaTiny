@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib import auth
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.exceptions import PermissionDenied
@@ -108,7 +108,7 @@ class RegisterView(APIView):
         password2 = request.POST['password2']
         errors = check_error_accout(username, email, password, password2)
 
-        if not errors: # Not error
+        if not errors: 
           
             user_serializer = UserSerializer(data=request.data)
             if user_serializer.is_valid():
@@ -120,18 +120,13 @@ class RegisterView(APIView):
             auth.login(request, user_login)
 
 
-            # Crete profile
-            
+            # Create profile
             profile = Profile.objects.create(user=request.user)
             profile.save()
 
-
-
-            # breakpoint()
             return JsonResponse({'redirect': True})
-            # else: return redirect('/register/')
+  
         else:
-            
             return JsonResponse(errors)
 
 
@@ -168,8 +163,13 @@ class Setting(LoginRequiredMixin, View):
             return JsonResponse({'error': 'ER'})
             
 
-class UploadPost(LoginRequiredMixin, APIView):
-    login_url = 'signin' 
+class UploadPost(LoginRequiredMixin, PermissionRequiredMixin, APIView):
+    login_url = 'signin'
+    permission_required = ['core.add_post']
+
+    def handle_no_permission(self):
+        # Customize the behavior when the user doesn't have the required permission
+        raise PermissionDenied("You don't have permission")
 
     def get(self, request):
         return render(request, 'home.html')
@@ -191,7 +191,6 @@ class UploadPost(LoginRequiredMixin, APIView):
                     image_path = storage.child(dest).get_url(None) # get url
               
                     # Create relationship post-image
-           
                     add_img = ImagesOfPost.objects.create(id=id, post=post, image_path=image_path)
                     add_img.save()
 
@@ -292,6 +291,45 @@ class ShowLikePost(LoginRequiredMixin, View):
             'data': data,
         })
     
+
+class BanUser(LoginRequiredMixin, View):
+    login_url = 'signin'
+
+    def post(self, request):
+        id_user_ban = request.POST['id_user_ban']
+        id_user_unban = request.POST['id_user_unban']
+        breakpoint()
+        user_ban = User.objects.filter(id=id_user_ban).first()
+        user_unban = User.objects.filter(id=id_user_unban).first()
+
+        if user_ban and not user_ban.is_staff and request.user.is_staff:
+            try:
+                default_gr = Group.objects.get(name='default')
+                default_gr.user_set.remove(user_ban)
+            except: pass
+            
+            try:
+                mod_gr = Group.objects.get(name='mod')
+                mod_gr.user_set.remove(user_ban)
+            except: pass
+            
+    
+            return JsonResponse({'type': 'ban'})
+        
+        if user_unban and request.user.is_staff:
+            try:
+                default_gr = Group.objects.get(name='default')
+                default_gr.user_set.add(user_unban)
+            except: pass
+      
+
+            return JsonResponse({'type': 'unban'})
+
+        assert False, "JsonResponse({'success': False})"
+
+        
+
+        
 
 
 

@@ -10,4 +10,8 @@ def zipf(list1, list2):
 def subtract(value, args):
     return value - args
 
+@register.filter(name="has_perm")
+def has_permission(user, perm):
+    return user.has_perm(perm)
+
 

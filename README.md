@@ -2,7 +2,7 @@
 
 ## Todo:
 show after upload ajax
-show popup comment like
+add user to group after register
 test
 
 ##### How to write filter jinja2

@@ -146,33 +146,43 @@
                                                 <i class="uil-comment-slash mr-1"></i> Disable comments
                                             </a>
                                         </li> -->
-                                        <!-- <li>
-                                            <a 
-                                                class="delete_post flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
-                                                <i class="uil-ban mr-1"></i> Ban user
-                                            </a>
-                                        </li> -->
+                                        
                                         <li>
                                             <hr class="-mx-2 my-2 ">
                                         </li>
+                                        
+                                        {% if user.is_staff and post.user != user %}
+                                            {{post.user|has_perm:'core.add_post'}}
+                                            {% if post.user|has_perm:'core.add_post' %}
+                                            <li>
+                                                <a style="color: #ffc107;" class="ban_user flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-500 rounded-md ">
+                                                    <i  class="uil-ban mr-1">
+                                                        <input type="hidden" name="id_user_ban" value="{{post.user.id}}">
+                                                    </i> Ban User
+                                                </a>
+                                            </li>
+                                            {% else %}
+                                            <li>
+                                                <a style="color: #0de510;" class="ban_user flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-500 rounded-md ">
+                                                    <i  class="uil-ban mr-1">
+                                                        <input type="hidden" name="id_user_unban" value="{{post.user.id}}">
+                                                    </i> Unban User
+                                                </a>
+                                            </li>
+                                            {% endif %}
+                                        {% endif %}
+
                                         {% if user == post.user or perms.core.delete_post %}
                                         <li>
-                                            <a
-                                                class="delete_post flex items-center px-3 py-2 text-red-500 hover:bg-red-100 hover:text-red-500 rounded-md ">
+                                            <a class="delete_post flex items-center px-3 py-2 text-red-500 hover:bg-red-100 hover:text-red-500 rounded-md ">
                                                 <i class="uil-trash-alt mr-1">
                                                     <input type="hidden" name="delete_post" value="{{post.id}}">
                                                 </i> Delete
                                             </a>
                                         </li>
                                         {% endif %}
-                                        <!-- <li>
-                                            <a
-                                                class="delete_post flex items-center px-3 py-2 text-red-500 hover:bg-red-100 hover:text-red-500 rounded-md ">
-                                                <i class="uil-trash-alt mr-1">
-                                                    <input type="hidden" name="delete_post" value="{{post.id}}">
-                                                </i> Hide Post
-                                            </a>
-                                        </li> -->
+
+                                   
                                     </ul>
 
                                 </div>
@@ -696,8 +706,8 @@
 
                     document.getElementById('form-upload-post').reset();
                 },
-                error: function () {
-
+                error: function(res) {
+                    alert("You aren't permission to upload")
                 }
 
             })
@@ -826,7 +836,7 @@
             });
         })
 
-        // Delte post
+        // Delete post
         $(document).on('click', '.delete_post', function (e) {
             e.preventDefault();
             const id_post =  e.target.querySelector('input[name="delete_post"]').value;
@@ -851,7 +861,42 @@
 
         })
 
+        // Banning User
+        $(document).on('click', '.ban_user', function(e) {
+            e.preventDefault();
+            var id_user_ban, id_user_unban;
+            if (e.target.querySelector('input[name=id_user_ban]')) {
+                id_user_ban = e.target.querySelector('input[name=id_user_ban]').value;
+                id_user_unban = "-1";
+            }
+            else {
+                id_user_unban = e.target.querySelector('input[name=id_user_unban]').value;
+                id_user_ban = "-1";
+            }
+            
+            console.log(id_user_ban,"-", id_user_unban);
 
+            $.ajax({
+                type: 'post',
+                url: '/ban_user/',
+                data: {
+                    'id_user_ban': id_user_ban,
+                    'id_user_unban': id_user_unban,
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                },
+                success: function (res) {
+                    if (res['type'] === 'ban') {
+                        alert('User is banned');
+                    }
+                    else if (res['type'] === 'unban') {
+                        alert('User is unbanned');
+                    }
+                },
+                error: function(res) {
+                    alert('You aren\'t allowed or user isn\'t exist');
+                }
+            });
+        });
 
 
     </script>
