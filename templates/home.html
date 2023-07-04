@@ -36,56 +36,50 @@
 
                 <div class="right-side lg:pr-4">
                     <!-- upload -->
-                    <div class="upload-post" >
+                    <div class="upload-post">
                         <h2><strong>Upload your pictures or videos</strong></h2>
                     </div>
 
-                    <div>
-                        <!-- notification contents -->
-                        <div>
-                            <form id="form-upload-post">
-                                {% csrf_token %}
-                                <div class="flex flex-col choose-upload text-center"
-                                    style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
-                                    <div class="container-form" style="background-color:rgba(255,255,255,0.8);">
-                                        <textarea required name="title" id="title" cols="20" rows="3"
-                                            placeholder="Write caption"
-                                            style="margin-top:8px; padding: 16px; background-color: #fff; width: 100px"></textarea>
+                    <!-- notification contents -->
 
-                                        <div>
+                    <form id="form-upload-post">
+                        {% csrf_token %}
+                        <div class="flex flex-col choose-upload text-center"
+                            style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
+                            <div class="container-form" style="background-color:rgba(255,255,255,0.8);">
+                                <textarea required name="title" id="title" cols="20" rows="3"
+                                    placeholder="Write caption"
+                                    style="margin-top:8px; padding: 16px; background-color: #fff; width: 100px"></textarea>
 
-                                            <div id="dragger" style="background-color: #fff;">
-                                                <div>
-                                                    <div id="showImage" style="display: flex; justify-content: center; padding: 40px; 
+                                <div id="dragger" style="background-color: #fff;">
+                                    <div>
+                                        <div id="showImage" style="display: flex; justify-content: center; padding: 40px; 
                                                     align-items: center; flex-direction: column; border-radius: 10px; background-color: white;
                                                      margin:auto; margin-top:8px ">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="4em"
-                                                            viewBox="0 0 512 512"
-                                                            onclick="selectImageToUpload()"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                                                            <path
-                                                                d="M0 96C0 60.7 28.7 32 64 32H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM323.8 202.5c-4.5-6.6-11.9-10.5-19.8-10.5s-15.4 3.9-19.8 10.5l-87 127.6L170.7 297c-4.6-5.7-11.5-9-18.7-9s-14.2 3.3-18.7 9l-64 80c-5.8 7.2-6.9 17.1-2.9 25.4s12.4 13.6 21.6 13.6h96 32H424c8.9 0 17.1-4.9 21.2-12.8s3.6-17.4-1.4-24.7l-120-176zM112 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-                                                        </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="4em" viewBox="0 0 512 512"
+                                                onclick="selectImageToUpload()"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                                                <path
+                                                    d="M0 96C0 60.7 28.7 32 64 32H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM323.8 202.5c-4.5-6.6-11.9-10.5-19.8-10.5s-15.4 3.9-19.8 10.5l-87 127.6L170.7 297c-4.6-5.7-11.5-9-18.7-9s-14.2 3.3-18.7 9l-64 80c-5.8 7.2-6.9 17.1-2.9 25.4s12.4 13.6 21.6 13.6h96 32H424c8.9 0 17.1-4.9 21.2-12.8s3.6-17.4-1.4-24.7l-120-176zM112 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+                                            </svg>
 
-                                                        <!-- <h2 style="margin-top: 8px">Drag and drop file</h2>
+                                            <!-- <h2 style="margin-top: 8px">Drag and drop file</h2>
                                                         <h1 style="margin-top: 8px"><strong>OR</strong></h1> -->
-                                                    </div>
-                                                </div>
-                                                <input class="button soft-warning small" type="file" id="images"
-                                                    style="display: none;" accept="image/*re" name="images" multiple
-                                                    onchange="imageSelect()">
-                                                <button type="button" id="" class="button soft-warning small btn-post"
-                                                    onclick="selectImageToUpload()">
-                                                    Choose file</button>
-                                            </div>
                                         </div>
-                                        <input type="submit" value="Post" id="" class="btn-post"
-                                            style="background-color: #1877f2; width:100%; height: 42px; margin-top:16px">
                                     </div>
+                                    <input class="button soft-warning small" type="file" id="images"
+                                        style="display: none;" accept="image/*re" name="images" multiple
+                                        onchange="imageSelect()">
+                                    <button type="button" id="" class="button soft-warning small btn-post"
+                                        onclick="selectImageToUpload()">
+                                        Choose file</button>
                                 </div>
-                            </form>
-                        </div>
 
-                    </div>
+                                <input type="submit" value="Post" id="" class="btn-post"
+                                    style="background-color: #1877f2; width:100%; height: 42px; margin-top:16px">
+                            </div>
+                        </div>
+                    </form>
+
 
                 </div>
 
@@ -126,46 +120,64 @@
                                             </a>
                                         </li> -->
                                         <li>
-                                            <a onclick="showModalEditor(event)" class="js-edit-post flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
+                                            <a onclick="showModalEditor(event)"
+                                                class="js-edit-post flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
                                                 <i class="uil-edit-alt mr-1">
                                                     <input type="hidden" name="id_post" value="{{post.id}}">
                                                 </i> Edit Post
                                             </a>
                                         </li>
+
+                                        {% if post.is_enabled_comments %}
                                         <li>
-                                            <a href="#"
-                                                class="flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
-                                                <i class="uil-comment-slash mr-1"></i> Disable comments
+                                            <a class="dis-enable-comment flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
+                                                <i class="uil-comment-slash mr-1">
+                                                    <input type="hidden" name="id_post" value="{{post.id}}">
+                                                </i> 
+                                                <span>Disable comments</span>
                                             </a>
                                         </li>
-                                        
+                                        {% else %}
+                                        <li>
+                                            <a class="dis-enable-comment flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
+                                                <i class="uil-comment-slash mr-1">
+                                                    <input type="hidden" name="id_post" value="{{post.id}}">
+                                                </i> 
+                                                <span>Enable comments</span>
+                                            </a>
+                                        </li>
+                                        {% endif %}
+
                                         <li>
                                             <hr class="-mx-2 my-2 ">
                                         </li>
-                                        
+
                                         {% if user.is_staff and post.user != user %}
-                                            {% if post.user|has_perm:'core.add_post' %}
-                                            <li>
-                                                <a style="color: #ffc107;" class="ban_user flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-500 rounded-md ">
-                                                    <i  class="uil-ban mr-1">
-                                                        <input type="hidden" name="id_user_ban" value="{{post.user.id}}">
-                                                    </i> Ban User
-                                                </a>
-                                            </li>
-                                            {% else %}
-                                            <li>
-                                                <a style="color: #0de510;" class="ban_user flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-500 rounded-md ">
-                                                    <i  class="uil-ban mr-1">
-                                                        <input type="hidden" name="id_user_unban" value="{{post.user.id}}">
-                                                    </i> Unban User
-                                                </a>
-                                            </li>
-                                            {% endif %}
+                                        {% if post.user|has_perm:'core.add_post' %}
+                                        <li>
+                                            <a style="color: #ffc107;"
+                                                class="ban_user flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-500 rounded-md ">
+                                                <i class="uil-ban mr-1">
+                                                    <input type="hidden" name="id_user_ban" value="{{post.user.id}}">
+                                                </i> Ban User
+                                            </a>
+                                        </li>
+                                        {% else %}
+                                        <li>
+                                            <a style="color: #0de510;"
+                                                class="ban_user flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-500 rounded-md ">
+                                                <i class="uil-ban mr-1">
+                                                    <input type="hidden" name="id_user_unban" value="{{post.user.id}}">
+                                                </i> Unban User
+                                            </a>
+                                        </li>
+                                        {% endif %}
                                         {% endif %}
 
                                         {% if user == post.user or perms.core.delete_post %}
                                         <li>
-                                            <a class="delete_post flex items-center px-3 py-2 text-red-500 hover:bg-red-100 hover:text-red-500 rounded-md ">
+                                            <a
+                                                class="delete_post flex items-center px-3 py-2 text-red-500 hover:bg-red-100 hover:text-red-500 rounded-md ">
                                                 <i class="uil-trash-alt mr-1">
                                                     <input type="hidden" name="delete_post" value="{{post.id}}">
                                                 </i> Delete
@@ -173,7 +185,7 @@
                                         </li>
                                         {% endif %}
 
-                                   
+
                                     </ul>
 
                                 </div>
@@ -200,29 +212,31 @@
                         <div class="post-image" uk-lightbox>
                             <div class="grid grid-cols-2 gap-2 p-2">
                                 {% for image in list_images %}
-                                    {% if forloop.counter0 == 0 %}
-                                    <a href="{{image.image_path}}" class="col-span-2">
-                                        <img src="{{image.image_path}}" alt="" class="rounded-md w-full lg:h-76 object-cover">
-                                    </a>
-                                    {% elif forloop.counter0 == 1 %}
-                                    <a href="{{image.image_path}}">
-                                        <img src="{{image.image_path}}" alt="" class="rounded-md w-full h-full">
-                                    </a>
-                                    {% elif forloop.counter0 == 2 %}
-                                    <a href="{{image.image_path}}" class="relative">
-                                        <img src="{{image.image_path}}" alt="" class="rounded-md w-full h-full">
-                                        {% if list_images|length > 3 %}
-                                        <div class="absolute bg-gray-900 bg-opacity-30 flex justify-center items-center text-white rounded-md inset-0 text-2xl">
-                                            +{{list_images|length|subtract:3}} more 
-                                        </div>
-                                        {% endif %}
-                                    </a>
-                                    {% elif forloop.counter0 >= 3 %} 
-                                        <a href="{{image.image_path}}">
-                                            <img src="{{image.image_path}}" alt="" style="width: 0;">
-                                        </a>
-                                    
+                                {% if forloop.counter0 == 0 %}
+                                <a href="{{image.image_path}}" class="col-span-2">
+                                    <img src="{{image.image_path}}" alt=""
+                                        class="rounded-md w-full lg:h-76 object-cover">
+                                </a>
+                                {% elif forloop.counter0 == 1 %}
+                                <a href="{{image.image_path}}">
+                                    <img src="{{image.image_path}}" alt="" class="rounded-md w-full h-full">
+                                </a>
+                                {% elif forloop.counter0 == 2 %}
+                                <a href="{{image.image_path}}" class="relative">
+                                    <img src="{{image.image_path}}" alt="" class="rounded-md w-full h-full">
+                                    {% if list_images|length > 3 %}
+                                    <div
+                                        class="absolute bg-gray-900 bg-opacity-30 flex justify-center items-center text-white rounded-md inset-0 text-2xl">
+                                        +{{list_images|length|subtract:3}} more
+                                    </div>
                                     {% endif %}
+                                </a>
+                                {% elif forloop.counter0 >= 3 %}
+                                <a href="{{image.image_path}}">
+                                    <img src="{{image.image_path}}" alt="" style="width: 0;">
+                                </a>
+
+                                {% endif %}
 
                                 {% endfor %}
                             </div>
@@ -239,14 +253,14 @@
                                         <input type="hidden" name="id_post" value="{{post.id}}">
                                         <div class="p-2 rounded-full text-black">
                                             {% if is_liked == True %}
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                                width="25" height="25" style="color: blue;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                                fill="currentColor" width="25" height="25" style="color: blue;">
                                                 <path
                                                     d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
                                             </svg>
                                             {% else %}
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                                width="25" height="25">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                                fill="currentColor" width="25" height="25">
                                                 <path
                                                     d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
                                             </svg>
@@ -263,8 +277,9 @@
                                 <div class="" style="display: flex; align-items:center">
                                     <a class="comment_post" href="#" class="flex items-center space-x-2">
                                         <div class="p-2 rounded-full text-black">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                                width="25" height="25" class="" style="margin-top:2px">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                                fill="currentColor" width="25" height="25" class=""
+                                                style="margin-top:2px">
                                                 <path fill-rule="evenodd"
                                                     d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"
                                                     clip-rule="evenodd" />
@@ -295,6 +310,7 @@
                             </div> -->
 
                             <!-- Comments -->
+                            {% if post.is_enabled_comments %}
                             <div class="comment_container" class="border-t pt-4 space-y-4 ">
                                 <div class="comments">
                                     {% for comment in comments reversed %}
@@ -307,7 +323,8 @@
                                             class="text-gray-700 py-2 px-3 rounded-md bg-gray-100 h-full relative lg:ml-5 ml-2 lg:mr-20   ">
                                             <p><b>{{comment.user.username}}</b></p>
                                             <p class="leading-6">{{comment.comment}} </p>
-                                            <div class="absolute w-3 h-3 top-3 -left-1 bg-gray-100 transform rotate-45 ">
+                                            <div
+                                                class="absolute w-3 h-3 top-3 -left-1 bg-gray-100 transform rotate-45 ">
                                             </div>
                                         </div>
                                     </div>
@@ -331,7 +348,8 @@
                                     <button type="submit" value=""></button>
                                 </form>
                             </div>
-
+                            {% endif %}
+                        
                         </div>
 
                     </div>
@@ -348,8 +366,8 @@
 
 
 
-                    <!-- post 4-->
-                    <!-- <div class="bg-white shadow rounded-md  -mx-2 lg:mx-0" id="toggle">
+                <!-- post 4-->
+                <!-- <div class="bg-white shadow rounded-md  -mx-2 lg:mx-0" id="toggle">
 
                             <div class="flex justify-between items-center px-4 py-3">
                                 <div class="flex flex-1 items-center space-x-4">
@@ -503,91 +521,91 @@
                         </div> -->
 
 
-        </div>
+            </div>
 
-        <!-- right sidebar-->
-        <div class="lg:w-5/12">
+            <!-- right sidebar-->
+            <div class="lg:w-5/12">
 
-            <div class="bg-white  shadow-md rounded-md overflow-hidden">
+                <div class="bg-white  shadow-md rounded-md overflow-hidden">
 
-                <div class="bg-gray-50  border-b border-gray-100 flex items-baseline justify-between py-4 px-6 ">
-                    <h2 class="font-semibold text-lg">Users You Can Follow</h2>
-                    <a href="#"> Refresh</a>
+                    <div class="bg-gray-50  border-b border-gray-100 flex items-baseline justify-between py-4 px-6 ">
+                        <h2 class="font-semibold text-lg">Users You Can Follow</h2>
+                        <a href="#"> Refresh</a>
+                    </div>
+
+                    <div class="divide-gray-300 divide-gray-50 divide-opacity-50 divide-y px-4 ">
+                        <div class="flex items-center justify-between py-3">
+                            <div class="flex flex-1 items-center space-x-4">
+                                <a href="profile.html">
+                                    <img src="{% static 'assets/images/avatars/avatar-2.jpg' %}"
+                                        class="bg-gray-200 rounded-full w-10 h-10">
+                                </a>
+                                <div class="flex flex-col">
+                                    <span class="block capitalize font-semibold"> tomi_ml </span>
+                                    <span class="block capitalize text-sm"> 320k followers </span>
+                                </div>
+                            </div>
+
+                            <a href="#"
+                                class="border border-gray-200 font-semibold px-4 py-1 rounded-full hover:bg-pink-600 hover:text-white hover:border-pink-600 ">
+                                Follow </a>
+                        </div>
+                        <div class="flex items-center justify-between py-3">
+                            <div class="flex flex-1 items-center space-x-4">
+                                <a href="profile.html">
+                                    <img src="{% static 'assets/images/avatars/avatar-1.jpg' %}"
+                                        class="bg-gray-200 rounded-full w-10 h-10">
+                                </a>
+                                <div class="flex flex-col">
+                                    <span class="block capitalize font-semibold"> taiye </span>
+                                    <span class="block capitalize text-sm"> New user </span>
+                                </div>
+                            </div>
+                            <a href="#"
+                                class="border border-gray-200 font-semibold px-4 py-1 rounded-full hover:bg-pink-600 hover:text-white hover:border-pink-600 ">
+                                Follow </a>
+                        </div>
+                        <div class="flex items-center justify-between py-3">
+                            <div class="flex flex-1 items-center space-x-4">
+                                <a href="profile.html">
+                                    <img src="{% static 'assets/images/avatars/avatar-5.jpg' %}"
+                                        class="bg-gray-200 rounded-full w-10 h-10">
+                                </a>
+                                <div class="flex flex-col">
+                                    <span class="block capitalize font-semibold"> kayode </span>
+                                    <span class="block capitalize text-sm"> 20.7k followers </span>
+                                </div>
+                            </div>
+                            <a href="#"
+                                class="border border-gray-200 font-semibold px-4 py-1 rounded-full hover:bg-pink-600 hover:text-white hover:border-pink-600 ">
+                                Follow </a>
+                        </div>
+                        <div class="flex items-center justify-between py-3">
+                            <div class="flex flex-1 items-center space-x-4">
+                                <a href="profile.html">
+                                    <img src="{% static 'assets/images/avatars/avatar-7.jpg' %}"
+                                        class="bg-gray-200 rounded-full w-10 h-10">
+                                </a>
+                                <div class="flex flex-col">
+                                    <span class="block capitalize font-semibold"> faith_do </span>
+                                    <span class="block capitalize text-sm"> 100.5k followers </span>
+                                </div>
+                            </div>
+
+                            <a href="#"
+                                class="border border-gray-200 font-semibold px-4 py-1 rounded-full hover:bg-pink-600 hover:text-white hover:border-pink-600 ">
+                                Follow </a>
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <div class="divide-gray-300 divide-gray-50 divide-opacity-50 divide-y px-4 ">
-                    <div class="flex items-center justify-between py-3">
-                        <div class="flex flex-1 items-center space-x-4">
-                            <a href="profile.html">
-                                <img src="{% static 'assets/images/avatars/avatar-2.jpg' %}"
-                                    class="bg-gray-200 rounded-full w-10 h-10">
-                            </a>
-                            <div class="flex flex-col">
-                                <span class="block capitalize font-semibold"> tomi_ml </span>
-                                <span class="block capitalize text-sm"> 320k followers </span>
-                            </div>
-                        </div>
 
-                        <a href="#"
-                            class="border border-gray-200 font-semibold px-4 py-1 rounded-full hover:bg-pink-600 hover:text-white hover:border-pink-600 ">
-                            Follow </a>
-                    </div>
-                    <div class="flex items-center justify-between py-3">
-                        <div class="flex flex-1 items-center space-x-4">
-                            <a href="profile.html">
-                                <img src="{% static 'assets/images/avatars/avatar-1.jpg' %}"
-                                    class="bg-gray-200 rounded-full w-10 h-10">
-                            </a>
-                            <div class="flex flex-col">
-                                <span class="block capitalize font-semibold"> taiye </span>
-                                <span class="block capitalize text-sm"> New user </span>
-                            </div>
-                        </div>
-                        <a href="#"
-                            class="border border-gray-200 font-semibold px-4 py-1 rounded-full hover:bg-pink-600 hover:text-white hover:border-pink-600 ">
-                            Follow </a>
-                    </div>
-                    <div class="flex items-center justify-between py-3">
-                        <div class="flex flex-1 items-center space-x-4">
-                            <a href="profile.html">
-                                <img src="{% static 'assets/images/avatars/avatar-5.jpg' %}"
-                                    class="bg-gray-200 rounded-full w-10 h-10">
-                            </a>
-                            <div class="flex flex-col">
-                                <span class="block capitalize font-semibold"> kayode </span>
-                                <span class="block capitalize text-sm"> 20.7k followers </span>
-                            </div>
-                        </div>
-                        <a href="#"
-                            class="border border-gray-200 font-semibold px-4 py-1 rounded-full hover:bg-pink-600 hover:text-white hover:border-pink-600 ">
-                            Follow </a>
-                    </div>
-                    <div class="flex items-center justify-between py-3">
-                        <div class="flex flex-1 items-center space-x-4">
-                            <a href="profile.html">
-                                <img src="{% static 'assets/images/avatars/avatar-7.jpg' %}"
-                                    class="bg-gray-200 rounded-full w-10 h-10">
-                            </a>
-                            <div class="flex flex-col">
-                                <span class="block capitalize font-semibold"> faith_do </span>
-                                <span class="block capitalize text-sm"> 100.5k followers </span>
-                            </div>
-                        </div>
-
-                        <a href="#"
-                            class="border border-gray-200 font-semibold px-4 py-1 rounded-full hover:bg-pink-600 hover:text-white hover:border-pink-600 ">
-                            Follow </a>
-                    </div>
-
-                </div>
 
             </div>
 
-
-
         </div>
-
-    </div>
 
     </div>
 
@@ -690,10 +708,9 @@
                     });
 
                     // Render post after upload
-                    var postHTML =
-                        `
+                    var postHTML = ``;
 
-                        `
+
 
 
                     console.log(333)
@@ -703,7 +720,7 @@
 
                     document.getElementById('form-upload-post').reset();
                 },
-                error: function(res) {
+                error: function (res) {
                     alert("You aren't permission to upload")
                 }
 
@@ -712,13 +729,13 @@
         })
 
         // Edit post
-        $(document).on('submit', '#js-form-edit-post', function(e) {
+        $(document).on('submit', '#js-form-edit-post', function (e) {
             e.preventDefault();
-    
+
             const inputImage = document.getElementById('js-edit-images').files;
             const formData = new FormData();
-        
-            
+
+
             // Note: need process the same name
             for (var obj of listImagesURL) {
                 let is_ip = true;
@@ -734,20 +751,20 @@
                     formData.append('old_images', obj['url']);
                 }
             }
-            
+
 
             formData.append('id', e.target.querySelector('input[name=id_post]').value);
             formData.append('title', $('#title_change').val());
             formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
 
             $.ajax({
-               type: 'POST',
-               url: '/edit_post/',
-               processData: false,
-               contentType: false,
-               enctype: 'multipart/form-data',
-               data: formData,
-               success: function(res) {
+                type: 'POST',
+                url: '/edit_post/',
+                processData: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
+                data: formData,
+                success: function (res) {
                     alert('Edit successful');
 
                     // Rerender after edit
@@ -755,7 +772,7 @@
                     if (post) {
                         const titleContainer = post.querySelector('.post-title');
                         const imageContainer = post.querySelector('.post-image');
-                        
+
                         titleContainer.textContent = res['title'];
                         console.log(res['path_images'])
                         var textHTML = "";
@@ -801,22 +818,22 @@
                                 `;
                             }
                         };
-                        
-                    
+
+
                         imageContainer.querySelector('div').innerHTML = textHTML;
                     }
-                    
-               },
-               error: function () {
-                alert('Error')
-               }
+
+                },
+                error: function () {
+                    alert('Error')
+                }
             });
-            
+
         })
-        
-    
-    
-        
+
+
+
+
         // Like
         $(document).on('click', '.like_post', function (event) {
             event.preventDefault()
@@ -860,10 +877,11 @@
         $(document).on('submit', '.form-comment-post', function (e) {
             e.preventDefault();
             const form = e.target;
+            const id_post = form.querySelector('input[name=id_post]').value;
 
             var formData = new FormData();
             formData.append('comment', form.querySelector('input[name=comment]').value);
-            formData.append('id_post', form.querySelector('input[name=id_post]').value);
+            formData.append('id_post', id_post);
             formData.append('csrfmiddlewaretoken', form.querySelector('input[name=csrfmiddlewaretoken]').value);
 
             $.ajax({
@@ -875,6 +893,8 @@
                 success: function (res) {
                     const commentContainer = form.parentNode;
                     const comments = commentContainer.querySelector('.comments');
+                    const rootPost = document.getElementById(id_post);
+                    const numberOfComments = rootPost.querySelector('.numberOfComments');
 
                     var newComment = `
                     <div class="flex">
@@ -890,12 +910,51 @@
                     </div>
                     `
 
+                    numberOfComments.textContent = res['no_of_comments'];
                     comments.innerHTML = newComment + comments.innerHTML;
                     document.querySelector('.form-comment-post').reset();
                 },
                 error: function () {
                     alert('ER')
                 }
+            });
+        })
+
+        // Dis-Enable comments
+        $(document).on('click', '.dis-enable-comment', function(e) {
+            e.preventDefault();
+            const id_post = e.target.parentNode.querySelector('input[name=id_post]').value;
+            const rootPost = document.getElementById(id_post);
+
+            $.ajax({
+                type: 'POST',
+                url: '/dis_enable_comment/',
+                data: {
+                    id_post: id_post,
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                },
+                success: function(res) {
+                    
+                    var aTag = e.target;
+                    while (aTag.tagName !== "A") {
+                        aTag = aTag.parentNode;
+                    }
+                 
+                    if (res['is_enabled_comments']) {
+                        alert('Enabled comment');
+                        aTag.querySelector('span').textContent = "Disbale comment";
+                        rootPost.querySelector('.comment_container').style.display = 'block';
+                    }
+                    else {
+                        alert('Disabled comment');
+                        aTag.querySelector('span').textContent = "Enable comment";
+                        rootPost.querySelector('.comment_container').style.display = 'none';
+                    }
+                },
+                error: function() {
+                    alert('ERROR');
+                }
+
             });
         })
 
@@ -942,8 +1001,8 @@
         // Delete post
         $(document).on('click', '.delete_post', function (e) {
             e.preventDefault();
-            const id_post =  e.target.querySelector('input[name="delete_post"]').value;
-          
+            const id_post = e.target.querySelector('input[name="delete_post"]').value;
+
             $.ajax({
                 type: 'post',
                 url: '/delete_post/',
@@ -965,7 +1024,7 @@
         })
 
         // Banning User
-        $(document).on('click', '.ban_user', function(e) {
+        $(document).on('click', '.ban_user', function (e) {
             e.preventDefault();
 
             var root = e.target;
@@ -982,7 +1041,7 @@
                 id_user_unban = e.target.querySelector('input[name=id_user_unban]').value;
                 id_user_ban = "-1";
             }
-            
+
 
             $.ajax({
                 type: 'post',
@@ -1017,7 +1076,7 @@
 
                     }
                 },
-                error: function(res) {
+                error: function (res) {
                     alert('You aren\'t allowed or user isn\'t exist');
                 }
             });

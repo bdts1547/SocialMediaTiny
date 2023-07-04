@@ -35,6 +35,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     no_of_likes = models.IntegerField(default=0)
     no_of_comments = models.IntegerField(default=0)
+    is_enabled_comments = models.BooleanField(default=True)
 
     def __str__(self) -> str:
         return self.title

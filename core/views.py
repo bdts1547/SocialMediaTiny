@@ -313,9 +313,20 @@ class CommentPost(LoginRequiredMixin, View):
 
         return JsonResponse({
             'comment': comment,
+            'no_of_comments': post.no_of_comments,
             'username': user_login.username, 
             'image_path': user_login.profile.image_path,
             })
+
+
+class DisEnableComment(LoginRequiredMixin, View):
+    def post(self, request):
+        id_post = request.POST['id_post']
+        post = Post.objects.get(id=id_post)
+        post.is_enabled_comments = not post.is_enabled_comments
+        post.save()
+
+        return JsonResponse({'is_enabled_comments': post.is_enabled_comments})
 
 
 class ShowLikePost(LoginRequiredMixin, View):

@@ -14,6 +14,7 @@ urlpatterns = [
     path('delete_post/', DeletePost.as_view(), name='delete_post'),
     path('like_post/', LikePost.as_view(), name='like_post'),
     path('comment_post/', CommentPost.as_view(), name='comment_post'),
+    path('dis_enable_comment/', DisEnableComment.as_view(), name='dis_enable_comment'),
     path('show_likes/<str:id>', ShowLikePost.as_view(), name='show_likes'),
     path('ban_user/', BanUser.as_view(), name='ban_user'),
 
