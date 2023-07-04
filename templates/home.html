@@ -36,15 +36,13 @@
 
                 <div class="right-side lg:pr-4">
                     <!-- upload -->
-                    <div style="color: black; background-color: rgba(255, 255, 255, 1); padding: 8px; 
-                    border-top-left-radius: 5px; border-top-right-radius: 5px;">
-                        <h2 style="font-size: 24px; text-align: center;"><strong>Upload your pictures or videos</strong>
-                        </h2>
+                    <div class="upload-post" >
+                        <h2><strong>Upload your pictures or videos</strong></h2>
                     </div>
 
                     <div>
                         <!-- notification contents -->
-                        <div class="">
+                        <div>
                             <form id="form-upload-post">
                                 {% csrf_token %}
                                 <div class="flex flex-col choose-upload text-center"
@@ -54,7 +52,7 @@
                                             placeholder="Write caption"
                                             style="margin-top:8px; padding: 16px; background-color: #fff; width: 100px"></textarea>
 
-                                        <div id="">
+                                        <div>
 
                                             <div id="dragger" style="background-color: #fff;">
                                                 <div>
@@ -82,16 +80,9 @@
                                         </div>
                                         <input type="submit" value="Post" id="" class="btn-post"
                                             style="background-color: #1877f2; width:100%; height: 42px; margin-top:16px">
-
-
                                     </div>
-
-
                                 </div>
                             </form>
-
-
-
                         </div>
 
                     </div>
@@ -134,10 +125,11 @@
                                                 <i class="uil-share-alt mr-1"></i> Share
                                             </a>
                                         </li> -->
-                                        <!-- <li>
-                                            <a href="#"
-                                                class="flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
-                                                <i class="uil-edit-alt mr-1"></i> Edit Post
+                                        <li>
+                                            <a onclick="showModalEditor(event)" class="js-edit-post flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
+                                                <i class="uil-edit-alt mr-1">
+                                                    <input type="hidden" name="id_post" value="{{post.id}}">
+                                                </i> Edit Post
                                             </a>
                                         </li>
                                         <li>
@@ -145,14 +137,13 @@
                                                 class="flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
                                                 <i class="uil-comment-slash mr-1"></i> Disable comments
                                             </a>
-                                        </li> -->
+                                        </li>
                                         
                                         <li>
                                             <hr class="-mx-2 my-2 ">
                                         </li>
                                         
                                         {% if user.is_staff and post.user != user %}
-                                            {{post.user|has_perm:'core.add_post'}}
                                             {% if post.user|has_perm:'core.add_post' %}
                                             <li>
                                                 <a style="color: #ffc107;" class="ban_user flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-500 rounded-md ">
@@ -192,44 +183,51 @@
                         <h2 class="post-title">
                             {{post.title}}
                         </h2>
-                        <!-- Case 1 image -->
-                        {% if list_images|length < 2 %} 
-                        {% for image in list_images %} 
-                        <div uk-lightbox>
-                            <a href="{{image.image_path}}">
-                                <img src="{{image.image_path}}" alt="">
-                            </a>
-                        </div>
-                        {% endfor %}
 
-                        {% else %}
-                        <div uk-lightbox>
+                        <!-- Case 1 image -->
+                        <!-- {% if list_images|length < 0 %} 
+                        {% for image in list_images %} 
+                        <div class="post-image" uk-lightbox>
+                            <div class="">
+                                <a href="{{image.image_path}}">
+                                    <img src="{{image.image_path}}" alt="" style="width: 100%;">
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %} -->
+
+                        <!-- {% else %} -->
+                        <div class="post-image" uk-lightbox>
                             <div class="grid grid-cols-2 gap-2 p-2">
                                 {% for image in list_images %}
-                                {% if forloop.counter0 == 0 %}
-                                <a href="{{image.image_path}}" class="col-span-2">
-                                    <img src="{{image.image_path}}" alt="" class="rounded-md w-full lg:h-76 object-cover">
-                                </a>
-                                {% elif forloop.counter0 == 1 %}
-                                <a href="{{image.image_path}}">
-                                    <img src="{{image.image_path}}" alt="" class="rounded-md w-full h-full">
-                                </a>
-                                {% elif forloop.counter0 == 2 %}
-                                <a href="{{image.image_path}}" class="relative">
-                                    <img src="{{image.image_path}}" alt="" class="rounded-md w-full h-full">
-                                    {% if list_images|length > 3 %}
-                                    <div
-                                        class="absolute bg-gray-900 bg-opacity-30 flex justify-center items-center text-white rounded-md inset-0 text-2xl">
-                                        +{{list_images|length|subtract:3}} more </div>
+                                    {% if forloop.counter0 == 0 %}
+                                    <a href="{{image.image_path}}" class="col-span-2">
+                                        <img src="{{image.image_path}}" alt="" class="rounded-md w-full lg:h-76 object-cover">
+                                    </a>
+                                    {% elif forloop.counter0 == 1 %}
+                                    <a href="{{image.image_path}}">
+                                        <img src="{{image.image_path}}" alt="" class="rounded-md w-full h-full">
+                                    </a>
+                                    {% elif forloop.counter0 == 2 %}
+                                    <a href="{{image.image_path}}" class="relative">
+                                        <img src="{{image.image_path}}" alt="" class="rounded-md w-full h-full">
+                                        {% if list_images|length > 3 %}
+                                        <div class="absolute bg-gray-900 bg-opacity-30 flex justify-center items-center text-white rounded-md inset-0 text-2xl">
+                                            +{{list_images|length|subtract:3}} more 
+                                        </div>
+                                        {% endif %}
+                                    </a>
+                                    {% elif forloop.counter0 >= 3 %} 
+                                        <a href="{{image.image_path}}">
+                                            <img src="{{image.image_path}}" alt="" style="width: 0;">
+                                        </a>
+                                    
                                     {% endif %}
-                                </a>
-
-                                {% endif %}
 
                                 {% endfor %}
                             </div>
                         </div>
-                        {% endif %}
+                        <!-- {% endif %} -->
 
 
                         <div class="py-3 px-4 space-y-3">
@@ -692,7 +690,6 @@
                     });
 
                     // Render post after upload
-                    console.log(res['post'])
                     var postHTML =
                         `
 
@@ -714,6 +711,112 @@
 
         })
 
+        // Edit post
+        $(document).on('submit', '#js-form-edit-post', function(e) {
+            e.preventDefault();
+    
+            const inputImage = document.getElementById('js-edit-images').files;
+            const formData = new FormData();
+        
+            
+            // Note: need process the same name
+            for (var obj of listImagesURL) {
+                let is_ip = true;
+                for (let i = 0; i < inputImage.length; i++) {
+                    if (obj['name'] === inputImage[i].name) {
+                        formData.append('new_images', inputImage[i])
+                        is_ip = false;
+                        break;
+                    }
+                }
+
+                if (is_ip) {
+                    formData.append('old_images', obj['url']);
+                }
+            }
+            
+
+            formData.append('id', e.target.querySelector('input[name=id_post]').value);
+            formData.append('title', $('#title_change').val());
+            formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
+
+            $.ajax({
+               type: 'POST',
+               url: '/edit_post/',
+               processData: false,
+               contentType: false,
+               enctype: 'multipart/form-data',
+               data: formData,
+               success: function(res) {
+                    alert('Edit successful');
+
+                    // Rerender after edit
+                    const post = document.getElementById(res['id']);
+                    if (post) {
+                        const titleContainer = post.querySelector('.post-title');
+                        const imageContainer = post.querySelector('.post-image');
+                        
+                        titleContainer.textContent = res['title'];
+                        console.log(res['path_images'])
+                        var textHTML = "";
+                        for (let i = 0; i < res['path_images'].length; i++) {
+                            if (i === 0) {
+                                textHTML += `
+                                <a href="${res['path_images'][i]}" class="col-span-2">
+                                    <img src="${res['path_images'][i]}" alt="" class="rounded-md w-full lg:h-76 object-cover">
+                                </a>
+                                `;
+                            }
+                            else if (i === 1) {
+                                textHTML += `
+                                <a href="${res['path_images'][i]}">
+                                    <img src="${res['path_images'][i]}" alt="" class="rounded-md w-full h-full">
+                                </a>
+                                `;
+                            }
+                            else if (i === 2) {
+                                if (res['path_images'].length > 3) {
+                                    textHTML += `
+                                    <a href="${res['path_images'][i]}" class="relative">
+                                        <img src="${res['path_images'][i]}" alt="" class="rounded-md w-full h-full">
+                                        <div class="absolute bg-gray-900 bg-opacity-30 flex justify-center items-center text-white rounded-md inset-0 text-2xl">
+                                            +${res['path_images'].length - 3} more 
+                                        </div>
+                                    </a>
+                                    `;
+                                }
+                                else {
+                                    textHTML += `
+                                    <a href="${res['path_images'][i]}" class="relative">
+                                        <img src="${res['path_images'][i]}" alt="" class="rounded-md w-full h-full">
+                                    </a>
+                                    `;
+                                }
+                            }
+                            else {
+                                textHTML += `
+                                <a href="${res['path_images'][i]}">
+                                    <img src="${res['path_images'][i]}" alt="" style="width: 0;">
+                                </a>
+                                `;
+                            }
+                        };
+                        
+                    
+                        imageContainer.querySelector('div').innerHTML = textHTML;
+                    }
+                    
+               },
+               error: function () {
+                alert('Error')
+               }
+            });
+            
+        })
+        
+    
+    
+        
         // Like
         $(document).on('click', '.like_post', function (event) {
             event.preventDefault()
@@ -849,7 +952,7 @@
                     'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
                 },
                 success: function (res) {
-                    alert('OK')
+                    alert('Delete successful')
                     if (res['is_deleted']) {
                         document.getElementById(`${id_post}`).style.display = 'none';
                     }
@@ -864,6 +967,12 @@
         // Banning User
         $(document).on('click', '.ban_user', function(e) {
             e.preventDefault();
+
+            var root = e.target;
+            while (root.tagName !== 'LI') {
+                root = root.parentNode;
+            }
+
             var id_user_ban, id_user_unban;
             if (e.target.querySelector('input[name=id_user_ban]')) {
                 id_user_ban = e.target.querySelector('input[name=id_user_ban]').value;
@@ -874,7 +983,6 @@
                 id_user_ban = "-1";
             }
             
-            console.log(id_user_ban,"-", id_user_unban);
 
             $.ajax({
                 type: 'post',
@@ -887,9 +995,26 @@
                 success: function (res) {
                     if (res['type'] === 'ban') {
                         alert('User is banned');
+                        textHTML = `
+                            <a style="color: #0de510;" class="ban_user flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-500 rounded-md ">
+                                <i  class="uil-ban mr-1">
+                                    <input type="hidden" name="id_user_unban" value="${id_user_ban}">
+                                </i> Unban User
+                            </a>
+                        `
+                        root.innerHTML = textHTML
                     }
                     else if (res['type'] === 'unban') {
                         alert('User is unbanned');
+                        textHTML = `
+                            <a style="color: #ffc107;" class="ban_user flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-500 rounded-md ">
+                                <i  class="uil-ban mr-1">
+                                    <input type="hidden" name="id_user_ban" value="${id_user_unban}">
+                                </i> Ban User
+                            </a>
+                        `
+                        root.innerHTML = textHTML
+
                     }
                 },
                 error: function(res) {

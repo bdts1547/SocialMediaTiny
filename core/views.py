@@ -161,7 +161,7 @@ class Setting(LoginRequiredMixin, View):
             return JsonResponse({'redirect': '/setting'})
         else:
             return JsonResponse({'error': 'ER'})
-            
+
 
 class UploadPost(LoginRequiredMixin, PermissionRequiredMixin, APIView):
     login_url = 'signin'
@@ -185,14 +185,15 @@ class UploadPost(LoginRequiredMixin, PermissionRequiredMixin, APIView):
             images = request.FILES.getlist('images[]')
             if images:
                 for image in images:
-                    id = str(uuid.uuid4())
-                    dest = f'media/post_images/{id}.jpg'
-                    storage.child(dest).put(image) # Save to firebase storage
-                    image_path = storage.child(dest).get_url(None) # get url
+                    save_image_post_to_firebase(storage, image, post)
+                    # id = str(uuid.uuid4())
+                    # dest = f'media/post_images/{id}.jpg'
+                    # storage.child(dest).put(image) # Save to firebase storage
+                    # image_path = storage.child(dest).get_url(None) # get url
               
-                    # Create relationship post-image
-                    add_img = ImagesOfPost.objects.create(id=id, post=post, image_path=image_path)
-                    add_img.save()
+                    # # Create relationship post-image
+                    # add_img = ImagesOfPost.objects.create(id=id, post=post, image_path=image_path)
+                    # add_img.save()
 
 
             post_updated = Post.objects.get(id=post.id)
@@ -204,6 +205,51 @@ class UploadPost(LoginRequiredMixin, PermissionRequiredMixin, APIView):
             
         assert False, post_serializer.errors
         # return JsonResponse({'errors': post_serializer.errors})
+
+
+class EditPost(LoginRequiredMixin, View):
+    login_url = 'signin'
+
+    def get(self, request):
+        id_post = request.GET['id_post']
+        post = Post.objects.get(id=id_post)
+        path_images = [image.image_path for image in post.images.all()]
+        
+        return JsonResponse({
+            'username': post.user.username,
+            'profile_image': post.user.profile.image_path,
+            'title': post.title,
+            'images_url': path_images,
+        })
+
+    def post(self, request):
+        id_post = request.POST['id']
+        title = request.POST['title']
+        images = request.FILES.getlist('new_images')
+        post = Post.objects.get(id=id_post)
+
+        # Change images
+        try:
+            old_current_images_path = request.POST.getlist('old_images')
+            old_images = post.images.all()
+            for img in old_images:
+                if img.image_path not in old_current_images_path:
+                    img.delete()
+        except: pass
+        if images:
+            for image in images:
+                save_image_post_to_firebase(storage, image, post)
+            
+        post.title = title
+        post.save()
+
+        post = Post.objects.get(id=post.id)
+        path_images = [image.image_path for image in post.images.all()]
+        return JsonResponse({
+            'id': post.id,
+            'title': title,
+            'path_images': path_images,
+        })
 
 
 class DeletePost(LoginRequiredMixin, View):
@@ -298,7 +344,7 @@ class BanUser(LoginRequiredMixin, View):
     def post(self, request):
         id_user_ban = request.POST['id_user_ban']
         id_user_unban = request.POST['id_user_unban']
-        breakpoint()
+
         user_ban = User.objects.filter(id=id_user_ban).first()
         user_unban = User.objects.filter(id=id_user_unban).first()
 

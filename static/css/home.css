@@ -4,7 +4,7 @@
 }
 
 
-#modal-like {
+.modal {
     display: none;
     align-items: center;
     justify-content: center;
@@ -17,10 +17,10 @@
 }
 
 .modal-container {
-    background-color: white;
-    width: 400px;
+    background-color: #fff;
+    width: 500px;
     max-width: calc(100% - 32px);
-    max-height: 400px;
+    max-height: calc(100% - 64px);
     border-radius: 5px;
 }
 
@@ -28,12 +28,30 @@
     justify-content: space-between;
     margin-left: 16px;
     margin-right: 16px;
-    font-size: 24px;
+    font-size: 20px;
 }
 
 .close-icon {
     padding: 8px;
 }
+
+
+.image-item {
+    position: relative;
+}
+
+.close-icon-image {
+    position: absolute;
+    font-size: 26px !important;
+    color: #fff;
+    padding: 4px;
+}
+
+.close-icon-image:hover {
+    cursor: pointer;
+    opacity: 0.7;
+}
+
 
 .close-icon:hover {
     cursor: pointer;
@@ -70,10 +88,35 @@
     cursor: pointer;
 }
 
+
+
+
+
+.upload-post {
+    color: black; 
+    background-color: rgba(255, 255, 255, 1); 
+    padding: 8px; 
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.upload-post h2 {
+    font-size: 24px; 
+    text-align: center;
+}
+
+
+
+
+
+
+
+
+
 .comments {
     margin-bottom: 8px;
     max-height: 250px; 
-    overflow-y:scroll;
+    overflow-y: auto;
 }
 
 .comment {
@@ -83,8 +126,6 @@
 .form-comment-post {
     margin-top: 8px;
 }
-
-
 
 
 

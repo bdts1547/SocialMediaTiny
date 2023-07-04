@@ -1,27 +1,190 @@
-
-
-<div id="modal-like">
+<div id="modal-like" class="modal">
     <div class="modal-container">
         <header class="modal-header">
             <h1>All</h1> <i class="close-icon fa fa-times" aria-hidden="true" onclick="hideModalLike()"></i>
         </header>
         <hr>
         <div class="modal-body" id="js-show-user-like">
-
+            <!-- Binding data from backend -->
         </div>
     </div>
-
 
 </div>
 
 
-<script>
+<div id="js-modal-edit-post" class="modal">
+    <div class="modal-container">
+        <header class="modal-header">
+            <h2>Edit Post</h2> <i class="close-icon fa fa-times" aria-hidden="true" onclick="hideModalEditor()"></i>
+        </header>
+        <div class="flex flex-1 items-center space-x-4">
+            <a href="" style="margin-left: 16px; margin-top: 8px;">
+                <div class="bg-gradient-to-tr from-yellow-600 to-pink-600 p-0.5 rounded-full">
+                    <img src="" class="bg-gray-200 border border-white rounded-full w-8 h-8">
+                </div>
+            </a>
+            <span class="js-username block capitalize" style="font-weight: 800; color:black">
+            </span>
+
+        </div>
+        <form id="js-form-edit-post" class="form-edit-post" >
+            {% csrf_token %}
+            <div class="" style="overflow-y: scroll; max-height:400px">
+                <textarea required name="title" id="title_change"
+                style="margin-top:8px; padding: 16px; background-color: #fff;"></textarea>
+
+                <div class="js-post-image post-image grid grid-cols-2 gap-2 p-2" uk-lightbox>
+                   <!-- Show images here -->
+                </div>
+
+                <div style="display: flex; justify-content:center;">
+                    <input type="hidden" name="id_post" value="">
+                    <input class="button soft-warning small" type="file" id="js-edit-images" class="js-images" style="display: none;" accept="image/*"
+                        name="images" multiple onchange="selectImageToEditPost(event)">
+                    <button type="button" class="button soft-warning small btn-post" onclick="document.getElementById('js-edit-images').click()">
+                        Choose file</button>
+
+                </div>
+            </div>
+
+
+            <input type="submit" value="Edit" class="btn-post"
+                style="background-color: #1877f2; width:100%; height: 42px; margin-top:16px;">
+        </form>
+    </div>
+</div>
+
+
+
+
+
+<script type="text/javascript">
     function hideModalLike() {
         const modalLike = document.getElementById('modal-like');
         modalLike.style.display = 'none';
     }
+
+  
+    
+    // Show image after change images
+    var listImagesURL = [];
+    function selectImageToEditPost(e) {
+        e.preventDefault();
+
+        var listImagesUpload = document.getElementById('js-edit-images').files;
+        var imageHTML = "";
+        for (let i = 0 ; i < listImagesUpload.length; i++) {
+            const url = URL.createObjectURL(listImagesUpload[i]);
+            listImagesURL.push({
+                'name': listImagesUpload[i].name,
+                'url': url,
+            })
+            imageHTML += `
+            <div class="image-item">
+                <i onclick="removeImage(event)" class="close-icon-image fa fa-times" aria-hidden="true"></i>
+                <a href="${url}" >
+                    <img src="${url}" alt="" class="rounded-md w-full h-full">
+                </a>
+            </div>
+            `;
+        }
+
+        const imageContainer = document.querySelector('.js-post-image');
+        imageContainer.innerHTML += imageHTML;
+        
+ 
+
+    }
+
+    // Remove images in edit post
+    function removeImage(e){
+        e.preventDefault();
+        
+        const imageTag = e.target.parentNode.querySelector('img');
+         
+        // Remove URL 
+        listImagesURL = listImagesURL.filter(obj => obj['url'] !== imageTag.src);
+        imageTag.remove();
+        
+        // Rerender after remove
+        var textHTML = "";
+        for (let obj of listImagesURL) {
+            textHTML += `
+            <div class="image-item">
+                <i onclick="removeImage(event)" class="close-icon-image fa fa-times" aria-hidden="true"></i>
+                <a href="${obj['url']}">
+                    <img src="${obj['url']}" alt="" class="rounded-md w-full h-full">
+                </a>
+            </div>
+            `
+        }
+        document.querySelector('.js-post-image').innerHTML = textHTML;
+    }
+
+    // Show modal to edit post
+    function showModalEditor(event) {
+        event.preventDefault();
+
+        const id_post = event.target.querySelector('input[name=id_post]').value;
+        const modalEditor = document.getElementById('js-modal-edit-post');
+        modalEditor.style.display = 'flex';
+
+        $.ajax({
+            type: 'get',
+            url: '/edit_post/',
+            data: {
+                id_post: id_post,
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function (res) {
+                modalEditor.querySelector('img').src = res['profile_image'];
+                modalEditor.querySelector('.js-username').textContent = res['username'];
+                modalEditor.querySelector('#title_change').value = res['title'];
+                modalEditor.querySelector('input[name=id_post]').value = id_post;
+                list_images = res['images_url'];
+
+                var textHTML = "";
+                for (let url of list_images) {
+                    textHTML += `
+                    <div class="image-item">
+                        <i onclick="removeImage(event)" class="close-icon-image fa fa-times" aria-hidden="true"></i>
+                        <a href="${url}">
+                            <img src="${url}" alt="" class="rounded-md w-full h-full">
+                        </a>
+                    </div>
+                    `
+                }
+
+                // Show Img
+                const imageContainer = document.querySelector('.js-post-image');
+                imageContainer.innerHTML = textHTML;
+                
+                const listImagesExists = imageContainer.querySelectorAll('img'); 
+                listImagesExists.forEach((img) => {
+                    listImagesURL.push({
+                        'name': 'old_image',
+                        'url': img.src,
+                    });
+                })
+    
+       
+            },
+            error: function () {
+                alert('error');
+            }
+        });
+    }
+
+    // Submit edit post 
+
+   
+
+    function hideModalEditor(event) {
+        const modalEditor = document.getElementById('js-modal-edit-post');
+        modalEditor.style.display = 'none';
+    }
+
+
+
+
 </script>
-
-
-
-
