@@ -64,4 +64,10 @@ class CommentOfPost(models.Model):
         return self.user.username + " " + self.comment
     
 
+class Follow(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followers')
+    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
+
+    def __str__(self) -> str:
+        return self.user.username + self.follower.username
 

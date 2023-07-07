@@ -130,20 +130,20 @@
 
                                         {% if post.is_enabled_comments %}
                                         <li>
-                                            <a class="dis-enable-comment flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
+                                            <a style="color:#ef0c0c;" class="dis-enable-comment flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
                                                 <i class="uil-comment-slash mr-1">
                                                     <input type="hidden" name="id_post" value="{{post.id}}">
                                                 </i> 
-                                                <span>Disable comments</span>
+                                                <span >Disable comments</span>
                                             </a>
                                         </li>
                                         {% else %}
                                         <li>
-                                            <a class="dis-enable-comment flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
+                                            <a style="color:#0de510;" class="dis-enable-comment flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
                                                 <i class="uil-comment-slash mr-1">
                                                     <input type="hidden" name="id_post" value="{{post.id}}">
                                                 </i> 
-                                                <span>Enable comments</span>
+                                                <span >Enable comments</span>
                                             </a>
                                         </li>
                                         {% endif %}
@@ -196,19 +196,7 @@
                             {{post.title}}
                         </h2>
 
-                        <!-- Case 1 image -->
-                        <!-- {% if list_images|length < 0 %} 
-                        {% for image in list_images %} 
-                        <div class="post-image" uk-lightbox>
-                            <div class="">
-                                <a href="{{image.image_path}}">
-                                    <img src="{{image.image_path}}" alt="" style="width: 100%;">
-                                </a>
-                            </div>
-                        </div>
-                        {% endfor %} -->
-
-                        <!-- {% else %} -->
+                    
                         <div class="post-image" uk-lightbox>
                             <div class="grid grid-cols-2 gap-2 p-2">
                                 {% for image in list_images %}
@@ -241,7 +229,7 @@
                                 {% endfor %}
                             </div>
                         </div>
-                        <!-- {% endif %} -->
+                      
 
 
                         <div class="py-3 px-4 space-y-3">
@@ -311,7 +299,45 @@
 
                             <!-- Comments -->
                             {% if post.is_enabled_comments %}
-                            <div class="comment_container" class="border-t pt-4 space-y-4 ">
+                            <div class="comment_container" class="border-t pt-4 space-y-4">
+                                <div class="comments">
+                                    {% for comment in comments reversed %}
+                                    <div class="comment flex">
+                                        <a href="#" class="w-10 h-10 rounded-full relative flex-shrink-0">
+                                            <img src="{{comment.user.profile.image_path}}" alt=""
+                                                class="absolute h-full rounded-full w-full">
+                                        </a>
+                                        <div
+                                            class="text-gray-700 py-2 px-3 rounded-md bg-gray-100 h-full relative lg:ml-5 ml-2 lg:mr-20   ">
+                                            <p><b>{{comment.user.username}}</b></p>
+                                            <p class="leading-6">{{comment.comment}} </p>
+                                            <div
+                                                class="absolute w-3 h-3 top-3 -left-1 bg-gray-100 transform rotate-45 ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+
+                                <hr>
+                                <!-- Input comment -->
+                                <form class="form-comment-post" action="">
+                                    {% csrf_token %}
+                                    <div class="bg-gray-100 bg-gray-100 rounded-full rounded-md relative ">
+                                        <input type="hidden" name="id_post" value="{{post.id}}">
+                                        <input required name="comment" type="text" placeholder="Enter comment"
+                                            class="bg-transparent max-h-10 shadow-none">
+                                        <div
+                                            class="absolute bottom-0 flex h-full items-center right-0 right-3 text-xl space-x-2">
+                                            <a href="#"> <i class="uil-image"></i></a>
+                                            <a href="#"> <i class="uil-video"></i></a>
+                                        </div>
+                                    </div>
+                                    <button type="submit" value=""></button>
+                                </form>
+                            </div>
+                            {% else %}
+                            <div class="comment_container" class="border-t pt-4 space-y-4" style="display: none;">
                                 <div class="comments">
                                     {% for comment in comments reversed %}
                                     <div class="comment flex">
@@ -708,7 +734,9 @@
                     });
 
                     // Render post after upload
-                    var postHTML = ``;
+                    var postHTML = `
+                    
+                    `;
 
 
 
@@ -831,9 +859,6 @@
 
         })
 
-
-
-
         // Like
         $(document).on('click', '.like_post', function (event) {
             event.preventDefault()
@@ -942,12 +967,14 @@
                  
                     if (res['is_enabled_comments']) {
                         alert('Enabled comment');
-                        aTag.querySelector('span').textContent = "Disbale comment";
+                        aTag.querySelector('span').textContent = "Disable comment";
+                        aTag.style.color = "#ef0c0c";
                         rootPost.querySelector('.comment_container').style.display = 'block';
                     }
                     else {
                         alert('Disabled comment');
                         aTag.querySelector('span').textContent = "Enable comment";
+                        aTag.style.color = '#0de510';
                         rootPost.querySelector('.comment_container').style.display = 'none';
                     }
                 },

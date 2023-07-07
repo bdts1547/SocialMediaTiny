@@ -8,7 +8,7 @@ from django.http import JsonResponse, HttpResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-
+from itertools import chain
 import pyrebase
 
 from .models import *
@@ -163,6 +163,76 @@ class Setting(LoginRequiredMixin, View):
             return JsonResponse({'error': 'ER'})
 
 
+class ProfileView(LoginRequiredMixin, View):
+    login_url = 'signin'
+
+    def get(self, request, username):
+        user = get_object_or_404(User, username=username)
+        profile = get_object_or_404(Profile, user=user)
+        posts = Post.objects.filter(user=user)
+
+        list_images_path = []
+        for post in posts:
+            images_path = [ image.image_path for image in post.images.all()]
+            list_images_path.append(images_path)
+        
+        list_images_path = list(chain(*list_images_path)) # Flatten 2d arrays to vector
+
+        is_followed = Follow.objects.filter(user=user, follower=request.user).exists()
+        
+
+        followers = user.followers.all()
+        following = user.following.all()
+        
+
+        # follow = Follow(user=user)
+        # ser = FollowSerializer(follow)
+
+        # breakpoint()
+
+        return render(request, 'profile.html', {
+            'profile': profile,
+            'no_of_posts': posts.count(),
+            'list_images': list_images_path,
+            'is_followed': is_followed,
+            'no_of_followers': followers.count(),
+            'no_of_following': following.count(),
+            
+        })
+
+
+class FollowView(LoginRequiredMixin, View):
+    login_url = 'signin'
+
+    def get(self, request):
+        return JsonResponse({})
+
+    def post(self, request):
+        user = User.objects.get(id=request.POST['id_user_followed'])
+        follower = User.objects.get(id=request.POST['id_user_following'])
+        is_followed = False
+
+        try:
+            follow = Follow.objects.get(user=user, follower=follower)
+            follow.delete()
+
+        except:
+            follow = Follow.objects.create(user=user, follower=follower) 
+            follow.save()
+            is_followed = True
+
+
+        no_of_followers = user.followers.all().count()
+        no_of_following = user.following.all().count()
+
+        return JsonResponse({
+            'is_followed': is_followed,
+            'no_of_followers': no_of_followers,
+            'no_of_following': no_of_following,
+            
+        })
+    
+
 class UploadPost(LoginRequiredMixin, PermissionRequiredMixin, APIView):
     login_url = 'signin'
     permission_required = ['core.add_post']
@@ -298,6 +368,7 @@ class CommentPost(LoginRequiredMixin, View):
     login_url = 'signin'
 
     def post(self, request):
+        
         id_post = request.POST['id_post']
         comment = request.POST['comment']
         user_login = request.user
@@ -385,7 +456,6 @@ class BanUser(LoginRequiredMixin, View):
         assert False, "JsonResponse({'success': False})"
 
         
-
         
 
 

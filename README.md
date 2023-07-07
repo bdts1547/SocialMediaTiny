@@ -2,7 +2,7 @@
 
 ## Todo:
 show after upload ajax
-add user to group after register
+profile
 test
 
 ##### How to write filter jinja2
