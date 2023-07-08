@@ -19,6 +19,7 @@ urlpatterns = [
     path('ban_user/', BanUser.as_view(), name='ban_user'),
     path('profile/<str:username>', ProfileView.as_view(), name='profile'),
     path('follow/', FollowView.as_view(), name='follow'),
+    path('search/', Search.as_view(), name='search'),
 
 
     path('test/', Test.as_view(), name='test'),

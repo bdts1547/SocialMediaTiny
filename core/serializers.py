@@ -13,10 +13,12 @@ class ProfileSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     image_path = serializers.CharField(read_only=True, source='profile.image_path')
-
+    location = serializers.CharField(read_only=True, source='profile.location')
+    count_followers = serializers.SerializerMethodField()
+    count_following = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ('id', 'password', 'username', 'email', 'followers', 'image_path')
+        fields = ('id', 'password', 'username', 'email', 'location', 'followers', 'image_path', 'count_following', 'count_followers')
         extra_kwargs = {
             'followers': {'required': False},
         }
@@ -28,6 +30,12 @@ class UserSerializer(serializers.ModelSerializer):
             email=validated_data['email']
         )
         return user
+    
+    def get_count_following(self, obj):
+        return obj.following.all().count()
+    
+    def get_count_followers(self, obj):
+        return obj.followers.all().count()
 
 
 

@@ -756,7 +756,7 @@
                         const imageContainer = post.querySelector('.post-image');
 
                         titleContainer.textContent = res['title'];
-                        console.log(res['path_images'])
+               
                         var textHTML = "";
                         for (let i = 0; i < res['path_images'].length; i++) {
                             if (i === 0) {
@@ -957,7 +957,6 @@
 
                 },
                 success: function (res) {
-                    console.log(res.data)
                     var modalHTML = "";
                     for (const user of res['data']) {
                         if (user['is_followed']) {
@@ -1132,8 +1131,6 @@
             e.preventDefault();
 
             var root = e.target;
-            console.log(root)
-            console.log(root.tagName)
             while (root.tagName !== 'BUTTON') {
                 root = root.parentNode;
             }
@@ -1161,6 +1158,8 @@
             })
         })
 
+        // Search username
+       
 
     </script>
 </body>

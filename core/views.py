@@ -487,7 +487,20 @@ class BanUser(LoginRequiredMixin, View):
 
         assert False, "JsonResponse({'success': False})"
 
+
+class Search(LoginRequiredMixin, View):
+    login_url = 'signin'
+
+    def get(self, request):
+        username = request.GET['username']
+        users = User.objects.filter(username__icontains=username)
+        users = UserSerializer(users, many=True).data
+
         
+        return render(request, 'search.html', {
+            'users': users,
+            'username': username,
+        })   
         
 
 
