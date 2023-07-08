@@ -10,6 +10,8 @@ from rest_framework.views import APIView
 
 from itertools import chain
 import pyrebase
+import random
+import json
 
 from .models import *
 from .serializers import *
@@ -39,7 +41,8 @@ class HomeView(LoginRequiredMixin, View):
     login_url = 'signin'
 
     def get(self, request):
-        profile_login = Profile.objects.get(user=request.user)
+        user_login = request.user
+        profile_login = Profile.objects.get(user=user_login)
         list_posts = Post.objects.all()
         list_profiles, list_images = [], []
         list_comments, list_user_likes = [], []
@@ -54,7 +57,7 @@ class HomeView(LoginRequiredMixin, View):
 
             # List user-like of posts
             # list_no_like_post = LikeOfPost.objects.filter(post=post)
-            user_liked_post = True if LikeOfPost.objects.filter(post=post, user=request.user).exists() else False
+            user_liked_post = True if LikeOfPost.objects.filter(post=post, user=user_login).exists() else False
             list_user_likes.append(user_liked_post)
 
             # List profile-comments of posts
@@ -62,9 +65,18 @@ class HomeView(LoginRequiredMixin, View):
             list_comments.append(list_comment_post)
         
         zip_data = zip(list_posts, list_profiles, list_images, list_comments, list_user_likes)
+        
+        
+        # User suggestion
+        user_suggestion = get_user_suggestion(user_login)
+        
+
+
+        
         return render(request, 'home.html', {
             'profile_login': profile_login,
             'zip_data': zip_data,
+            'user_suggestion': user_suggestion[:4],
             'test': 'test',
         })
     
@@ -108,13 +120,11 @@ class RegisterView(APIView):
         password2 = request.POST['password2']
         errors = check_error_accout(username, email, password, password2)
 
-        if not errors: 
-          
-            user_serializer = UserSerializer(data=request.data)
-            if user_serializer.is_valid():
-                user_serializer.save() 
-            
-
+        user_serializer = UserSerializer(data=request.data)
+        if user_serializer.is_valid() and password == password2:
+            user_serializer.save() 
+        
+     
             # Login 
             user_login = auth.authenticate(username=username, password=password)
             auth.login(request, user_login)
@@ -123,12 +133,16 @@ class RegisterView(APIView):
             # Create profile
             profile = Profile.objects.create(user=request.user)
             profile.save()
-
+        
             return JsonResponse({'redirect': True})
-  
         else:
-            return JsonResponse(errors)
+            errors = dict(user_serializer.errors)
+            if password != password2:
+                errors['password'] = "Password not matching"
 
+            return JsonResponse(errors)
+  
+    
 
 class Setting(LoginRequiredMixin, View):
     login_url = 'signin'
@@ -205,7 +219,14 @@ class FollowView(LoginRequiredMixin, View):
     login_url = 'signin'
 
     def get(self, request):
-        return JsonResponse({})
+        user_suggestion = get_user_suggestion(request.user)[:4]
+        data = UserSerializer(user_suggestion, many=True).data
+        user_login = UserSerializer(request.user).data
+
+        return JsonResponse({
+            'user_suggestion': data[:4],
+            'user_login': user_login,
+        })
 
     def post(self, request):
         user = User.objects.get(id=request.POST['id_user_followed'])
@@ -221,7 +242,7 @@ class FollowView(LoginRequiredMixin, View):
             follow.save()
             is_followed = True
 
-
+    
         no_of_followers = user.followers.all().count()
         no_of_following = user.following.all().count()
 
@@ -406,17 +427,28 @@ class ShowLikePost(LoginRequiredMixin, View):
     def get(self, request, id):
         post = Post.objects.get(id=id)
         likes = LikeOfPost.objects.filter(post=post)
+       
         data = []
         for like in likes:
+            if like.user == request.user: continue
+            is_followed = False
+            if Follow.objects.filter(user=like.user, follower=request.user).exists():
+                is_followed = True
+
             data.append({
+                'id': like.user.id,
                 'username': like.user.username,
                 'image_path': like.user.profile.image_path,
-                'is_followed': False,
+                'is_followed': is_followed,
             })
+
+        user_login = UserSerializer(request.user).data
 
         # username, image_path, follower
         return JsonResponse({
             'data': data,
+            'user_login': user_login,
+
         })
     
 

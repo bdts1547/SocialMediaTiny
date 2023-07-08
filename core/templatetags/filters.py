@@ -1,4 +1,5 @@
 from django import template
+from ..models import *
 
 register = template.Library()
 
@@ -13,5 +14,9 @@ def subtract(value, args):
 @register.filter(name="has_perm")
 def has_permission(user, perm):
     return user.has_perm(perm)
+
+@register.filter(name="count_followers")
+def count_followers(user1):
+    return user1.followers.all().count()
 
 

@@ -20,7 +20,9 @@ class Profile(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     about_me = models.TextField(blank=True, default="")
     location = models.CharField(max_length=255, default="", blank=True)
-    image_path = models.CharField(max_length=100000, default='https://firebasestorage.googleapis.com/v0/b/socialmediatiny.appspot.com/o/media%2Fprofile_images%2Fblank_profile.png?alt=media&token=a7798e1c-3621-486e-b025-1befb1c0caf8')
+    image_path = models.CharField(
+        max_length=100000, 
+        default='https://firebasestorage.googleapis.com/v0/b/socialmediatiny.appspot.com/o/media%2Fprofile_images%2Fblank_profile.png?alt=media&token=a7798e1c-3621-486e-b025-1befb1c0caf8')
     university = models.CharField(max_length=255, blank=True, default="")
     gender = models.CharField(max_length=1, default="M", choices=GENDER_CHOICE)
 
@@ -69,5 +71,5 @@ class Follow(models.Model):
     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
 
     def __str__(self) -> str:
-        return self.user.username + self.follower.username
+        return self.user.username + "-" + self.follower.username
 
