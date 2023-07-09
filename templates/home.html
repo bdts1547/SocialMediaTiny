@@ -113,39 +113,42 @@
                                     uk-drop="mode: hover;pos: top-right">
 
                                     <ul class="space-y-1">
-                                        <!-- <li>
-                                            <a href="#"
-                                                class="flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
-                                                <i class="uil-share-alt mr-1"></i> Share
-                                            </a>
-                                        </li> -->
                                         <li>
-                                            <a onclick="showModalEditor(event)"
-                                                class="js-edit-post flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
-                                                <i class="uil-edit-alt mr-1">
-                                                    <input type="hidden" name="id_post" value="{{post.id}}">
-                                                </i> Edit Post
+                                            <a onclick="hidePost(event)" href="" class="hide-post flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
+                                                <i class="uil-share-alt mr-1"></i> Hide Post
+                                                <input type="hidden" name="id_post" value="{{ post.id }}">
                                             </a>
                                         </li>
 
-                                        {% if post.is_enabled_comments %}
-                                        <li>
-                                            <a style="color:#ef0c0c;" class="dis-enable-comment flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
-                                                <i class="uil-comment-slash mr-1">
-                                                    <input type="hidden" name="id_post" value="{{post.id}}">
-                                                </i> 
-                                                <span >Disable comments</span>
-                                            </a>
-                                        </li>
-                                        {% else %}
-                                        <li>
-                                            <a style="color:#0de510;" class="dis-enable-comment flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
-                                                <i class="uil-comment-slash mr-1">
-                                                    <input type="hidden" name="id_post" value="{{post.id}}">
-                                                </i> 
-                                                <span >Enable comments</span>
-                                            </a>
-                                        </li>
+                                        {% if post.user == user %}
+                                            <li>
+                                                <a onclick="showModalEditor(event)"
+                                                    class="js-edit-post flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
+                                                    <i class="uil-edit-alt mr-1">
+                                                        <input type="hidden" name="id_post" value="{{post.id}}">
+                                                    </i> Edit Post
+                                                </a>
+                                            </li>
+
+                                            {% if post.is_enabled_comments %}
+                                            <li>
+                                                <a style="color:#ef0c0c;" class="dis-enable-comment flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
+                                                    <i class="uil-comment-slash mr-1">
+                                                        <input type="hidden" name="id_post" value="{{post.id}}">
+                                                    </i> 
+                                                    <span >Disable comments</span>
+                                                </a>
+                                            </li>
+                                            {% else %}
+                                            <li>
+                                                <a style="color:#0de510;" class="dis-enable-comment flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
+                                                    <i class="uil-comment-slash mr-1">
+                                                        <input type="hidden" name="id_post" value="{{post.id}}">
+                                                    </i> 
+                                                    <span >Enable comments</span>
+                                                </a>
+                                            </li>
+                                            {% endif %}
                                         {% endif %}
 
                                         <li>
@@ -654,7 +657,17 @@
             return imageHTML;
         }
 
+        function hidePost(event) {
+            event.preventDefault();
 
+            var root = event.target;
+            while (root.tagName !== "LI") {
+                root = root.parentNode;
+            }
+            
+            const id = root.querySelector('input[name=id_post]').value;
+            document.getElementById(id).style.display = 'none';
+        }
 
         // AJAX 
         // Upload post
@@ -680,30 +693,16 @@
                 enctype: 'multipart/form-data',
                 data: formData,
                 success: function (res) {
-                    alert('OK')
-                    // Clear image after upload
-                    var elementsImg = document.querySelectorAll('.image-upload');
-                    elementsImg.forEach(function (element) {
-                        element.remove();
-                    });
-
-                    // Render post after upload
-                    var postHTML = `
                     
-                    `;
-
-
-
-
-                    console.log(333)
-                    //$('#new-post').insertAdjacentHTML('beforebegin', 
-
-                    //)
-
-                    document.getElementById('form-upload-post').reset();
+                    window.location.assign("/")
                 },
-                error: function (res) {
-                    alert("You aren't permission to upload")
+                error: function (xhr) {
+                    if (xhr.status === 403) {
+                        alert("You aren't permission to upload");
+                    }
+                    else {
+                        console.log(xhr.responseText);
+                    }
                 }
 
             })
@@ -812,6 +811,9 @@
             });
 
         })
+
+        
+
 
         // Like
         $(document).on('click', '.like_post', function (event) {
@@ -1158,7 +1160,7 @@
             })
         })
 
-        // Search username
+    
        
 
     </script>

@@ -1,7 +1,6 @@
 
 ## Todo:
-- show after upload ajax
-- pagination search
+- pagination search - OK
 - autoload home
 - test all
 

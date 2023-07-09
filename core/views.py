@@ -8,6 +8,9 @@ from django.http import JsonResponse, HttpResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from django.core.paginator import Paginator
+
+
 from itertools import chain
 import pyrebase
 import random
@@ -143,7 +146,6 @@ class RegisterView(APIView):
             return JsonResponse(errors)
   
     
-
 class Setting(LoginRequiredMixin, View):
     login_url = 'signin'
 
@@ -260,7 +262,8 @@ class UploadPost(LoginRequiredMixin, PermissionRequiredMixin, APIView):
 
     def handle_no_permission(self):
         # Customize the behavior when the user doesn't have the required permission
-        raise PermissionDenied("You don't have permission")
+        response = JsonResponse({'error': "You don't have permission"}, status=403)
+        raise PermissionDenied(response)
 
     def get(self, request):
         return render(request, 'home.html')
@@ -277,25 +280,18 @@ class UploadPost(LoginRequiredMixin, PermissionRequiredMixin, APIView):
             if images:
                 for image in images:
                     save_image_post_to_firebase(storage, image, post)
-                    # id = str(uuid.uuid4())
-                    # dest = f'media/post_images/{id}.jpg'
-                    # storage.child(dest).put(image) # Save to firebase storage
-                    # image_path = storage.child(dest).get_url(None) # get url
-              
-                    # # Create relationship post-image
-                    # add_img = ImagesOfPost.objects.create(id=id, post=post, image_path=image_path)
-                    # add_img.save()
+                   
 
+            # post_updated = Post.objects.get(id=post.id)
+            # post_json = PostSerializer(post_updated).data
+            # path_images = [image.image_path for image in post_updated.images.all()]
+            
 
-            post_updated = Post.objects.get(id=post.id)
-            post_json = PostSerializer(post_updated).data
-            path_images = [image.image_path for image in post_updated.images.all()]
-            # breakpoint()
-            return JsonResponse(post_json)
+            return JsonResponse({})
         
             
         assert False, post_serializer.errors
-        # return JsonResponse({'errors': post_serializer.errors})
+        
 
 
 class EditPost(LoginRequiredMixin, View):
@@ -496,9 +492,15 @@ class Search(LoginRequiredMixin, View):
         users = User.objects.filter(username__icontains=username)
         users = UserSerializer(users, many=True).data
 
+        paginator = Paginator(users, 5)  # 5 items per page
+        page_number = request.GET.get('page', 1)
+        page = paginator.get_page(page_number)
+
+
+
         
         return render(request, 'search.html', {
-            'users': users,
+            'page': page,
             'username': username,
         })   
         
