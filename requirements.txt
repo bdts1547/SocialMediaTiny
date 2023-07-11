@@ -1,4 +1,4 @@
-python==3.9.12
+python==3.9
 Django==4.1.9
 django-allauth==0.54.0
 djangorestframework==3.14.0
