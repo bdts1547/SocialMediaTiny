@@ -2,7 +2,10 @@
 ## Todo:
 - pagination search - OK
 - infinity scrool - OK
-- Oauth with google - OK, facebook 
+- Oauth with google - OK
+- Notifications 
+- Chat real time 
+- Upload video
 - test all
 
 ##### How to write filter jinja2
