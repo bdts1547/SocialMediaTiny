@@ -1,5 +1,6 @@
 
 ## Todo:
+- custom reset password
 - pagination search - OK
 - infinity scrool - OK
 - Oauth with google - OK
