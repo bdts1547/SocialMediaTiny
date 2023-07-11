@@ -1,7 +1,8 @@
 
 ## Todo:
 - pagination search - OK
-- autoload home
+- infinity scrool - OK
+- Oauth with google - OK, facebook 
 - test all
 
 ##### How to write filter jinja2

@@ -1,4 +1,5 @@
 from django.urls import path
+
 from .views import *
 
 
@@ -9,6 +10,7 @@ urlpatterns = [
     path('signin/', SignInView.as_view(), name='signin'),
     path('logout/', Logout.as_view(), name='logout'),
     path('setting/', Setting.as_view(), name='setting'),
+    path('set_profile/', SetProfile.as_view(), name='set_profile'),
     path('upload_post/', UploadPost.as_view(), name='upload_post'),
     path('edit_post/', EditPost.as_view(), name='edit_post'),
     path('delete_post/', DeletePost.as_view(), name='delete_post'),

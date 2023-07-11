@@ -170,20 +170,22 @@
 				contentType: false,
 				data: formData,
 				success: function(res) {
-					alert('Success');
-					
 					if (res['is_followed']) {
 						btnFollow.querySelector('span').innerText = "Unfollow";
 						document.getElementById('js-follower').innerText = `${res['no_of_followers']} followers`;
-						
 					}
 					else {
 						btnFollow.querySelector('span').innerText = "Follow";
 						document.getElementById('js-follower').innerText = `${res['no_of_followers']} followers`;
 					}
 				},
-				error: function(res) {
-					alert('Error');
+				error: function(xhr) {
+					if (xhr.status === 403) {
+						alert('You don\'t have permission');
+					}
+					else {
+						alert('ERR')
+					}
 				}
 			});
 		});

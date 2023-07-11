@@ -19,7 +19,6 @@
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-
 </head>
 
 <body style="background-color: #e5e5e5 !important; ">
@@ -83,11 +82,11 @@
 
                 </div>
 
-                <div id="post-container">
-
-                    {% for post, profile, list_images, comments, is_liked in zip_data reversed %}
+                <div id="post-container" class="infinite-container">
+                    {% for post, profile, list_images, comments, is_liked in data %}
+                    
                     <!-- post -->
-                    <div id="{{post.id}}" class="bg-white shadow rounded-md -mx-2 lg:mx-0" style="margin-top: 16px;">
+                    <div id="{{post.id}}" class="infinite-item bg-white shadow rounded-md -mx-2 lg:mx-0" style="margin-top: 16px;">
 
                         <!-- post header-->
                         <div class="flex justify-between items-center px-4 py-3">
@@ -386,6 +385,14 @@
                     {% endfor %}
                 </div>
 
+                <div class="">
+                    {% if data.has_next %}
+                        <a class="infinite-more-link" href="?page={{ data.next_page_number }}">
+                            {{ data.next_page_number }}
+                        </a>
+                    {% endif %}
+                </div>
+
 
 
 
@@ -608,11 +615,30 @@
     <script src="{% static 'assets/js/jquery-3.3.1.min.js' %}"></script>
     <script src="{% static 'assets/js/uikit.js' %}"></script>
     <script src="{% static 'assets/js/simplebar.js' %}"></script>
-    <script src="{% static 'assets/js/custom.js' %}"></script>
+    <script src="{% static 'assets/js/custom.js' %}"></script>]
 
+    <script src="{% static 'assets/js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'assets/js/infinite.min.js '%}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.5/waypoints.min.js"></script>
 
     <script src="{% static '../../unpkg.com/ionicons%405.2.3/dist/ionicons.js' %}"></script>
 
+    <script>
+        
+
+        var infinite = new Waypoint.Infinite({
+            element: $('.infinite-container')[0],
+            offset: 'bottom-in-view',
+            onBeforePageLoad: function() {
+
+            },
+            onAfterPageLoad: function() {
+
+            }
+
+
+        })
+    </script>
 
     <script type="text/javascript">
         var listImage = [];
@@ -805,8 +831,13 @@
                     }
 
                 },
-                error: function () {
-                    alert('Error')
+                error: function (xhr) {
+                    if (xhr.status === 403) {
+                        alert("You aren't permission to edit");
+                    }
+                    else {
+                        alert("ERR")
+                    }
                 }
             });
 
@@ -848,8 +879,13 @@
                     }
 
                 },
-                error: function () {
-                    alert("ERR")
+                error: function (xhr) {
+                    if (xhr.status === 403) {
+                        alert("You aren't permission to like");
+                    }
+                    else {
+                        alert("ERR")
+                    }
                 }
             })
         })
@@ -895,8 +931,13 @@
                     comments.innerHTML = newComment + comments.innerHTML;
                     document.querySelector('.form-comment-post').reset();
                 },
-                error: function () {
-                    alert('ER')
+                error: function (xhr) {
+                    if (xhr.status === 403) {
+                        alert("You aren't have permission");
+                    }
+                    else {
+                        alert('ER')
+                    }
                 }
             });
         })
@@ -1154,8 +1195,13 @@
 
 
                 },
-                error: function(err) {
-                    alert("ERR");
+                error: function(xhr) {
+                    if (xhr.status === 403) {
+                        alert('You don\'t have permission');
+                    }
+                    else {
+                        alert("ERR");
+                    }
                 }
             })
         })

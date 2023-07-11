@@ -1,3 +1,5 @@
+{% load socialaccount %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,8 +16,8 @@
     <!-- MDB -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    
-    
+
+
     <style>
         .divider:after,
         .divider:before {
@@ -28,6 +30,8 @@
 </head>
 
 <body>
+
+
     <section class="vh-100">
         <div class="container py-5 h-100">
             <div class="row d-flex align-items-center justify-content-center h-100">
@@ -40,13 +44,15 @@
                         {% csrf_token %}
                         <!-- Email input -->
                         <div class="form-outline mb-4">
-                            <input type="text" id="username" name="username" class="form-control form-control-lg" value="" />
+                            <input type="text" id="username" name="username" class="form-control form-control-lg"
+                                value="" />
                             <label class="form-label" for="form1Example13">Username</label>
                         </div>
 
                         <!-- Password input -->
                         <div class="form-outline mb-4">
-                            <input type="password" id="password" name="password" class="form-control form-control-lg" value="" />
+                            <input type="password" id="password" name="password" class="form-control form-control-lg"
+                                value="" />
                             <label class="form-label" for="form1Example23">Password</label>
                             <label for="password" id="error_account" style="color: red;"></label>
                             {% if request.GET.next %}
@@ -70,18 +76,20 @@
                             <p class="text-center fw-bold mx-3 mb-0 text-muted">OR</p>
                         </div>
 
-                        <!-- <a class="btn btn-primary btn-lg btn-block" style="background-color: #3b5998" href="#!"
-                            role="button">
-                            <i class="fab fa-facebook-f me-2"></i>Continue with Facebook
-                        </a>
-                        <a class="btn btn-primary btn-lg btn-block" style="background-color: #55acee" href="#!"
-                            role="button">
-                            <i class="fab fa-twitter me-2"></i>Continue with Twitter</a> -->
-                        
-                        <p class="text-center text-muted mt-5 mb-0">Do not have an account?  
-                            <a href="/register/" style="text-decoration: none;"
-                            class="fw-bold text-body"><u>Sign up</u>
+                        <form action="">
+                            <a href="{% provider_login_url 'facebook' %}?next=/" class="btn btn-primary btn-lg btn-block" style="background-color: #3b5998" href="#!"
+                                role="button">
+                                <i class="fab fa-facebook-f me-2"></i>Sign in with Facebook
                             </a>
+
+                            <a href="{% provider_login_url 'google' %}?next=/set_profile/" class="btn btn-lg btn-block btn-primary" style="background-color: #dd4b39;" type="submit"><i
+                                    class="fab fa-google me-2"></i> Sign in with google
+                            </a>
+                        </form>
+
+
+                        <p class="text-center text-muted mt-5 mb-0">Do not have an account?
+                            <a href="/register/" style="text-decoration: none;" class="fw-bold text-body"><u>Sign up</u></a>
                         </p>
                     </form>
                 </div>
@@ -90,14 +98,14 @@
     </section>
 
     <script>
-        $(document).on("submit", "#form-login", function(e){
+        $(document).on("submit", "#form-login", function (e) {
             e.preventDefault()
 
             var formData = new FormData()
             formData.append('username', $('#username').val())
             formData.append('password', $('#password').val())
             formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val())
-            
+
             console.log()
             if ($('#redirect_next').val()) {
                 formData.append('redirect_next', $('#redirect_next').val())
@@ -110,7 +118,7 @@
                 processData: false,
                 contentType: false,
                 data: formData,
-                success: function(response){
+                success: function (response) {
                     if (response['redirect']) {
                         window.location.assign(response['redirect'])
                     }
@@ -125,7 +133,7 @@
                     }
 
                 },
-                error: function(){
+                error: function () {
                     alert("ERROR")
                 }
             })

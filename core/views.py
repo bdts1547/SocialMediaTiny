@@ -1,3 +1,4 @@
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth.models import User, Group
@@ -8,12 +9,17 @@ from django.http import JsonResponse, HttpResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import permission_required
+
+
 from django.core.paginator import Paginator
+from allauth.socialaccount.models import SocialAccount
 
 
 from itertools import chain
 import pyrebase
-import random
+import numpy as np
 import json
 
 from .models import *
@@ -47,6 +53,8 @@ class HomeView(LoginRequiredMixin, View):
         user_login = request.user
         profile_login = Profile.objects.get(user=user_login)
         list_posts = Post.objects.all()
+
+
         list_profiles, list_images = [], []
         list_comments, list_user_likes = [], []
         for post in list_posts:
@@ -59,7 +67,6 @@ class HomeView(LoginRequiredMixin, View):
             list_images.append(list_image_post)
 
             # List user-like of posts
-            # list_no_like_post = LikeOfPost.objects.filter(post=post)
             user_liked_post = True if LikeOfPost.objects.filter(post=post, user=user_login).exists() else False
             list_user_likes.append(user_liked_post)
 
@@ -67,18 +74,20 @@ class HomeView(LoginRequiredMixin, View):
             list_comment_post = CommentOfPost.objects.filter(post=post)
             list_comments.append(list_comment_post)
         
-        zip_data = zip(list_posts, list_profiles, list_images, list_comments, list_user_likes)
-        
-        
+        data = np.array([list_posts, list_profiles, list_images, list_comments, list_user_likes], dtype='object')
+        data = data.T # Transpose matrix
         # User suggestion
         user_suggestion = get_user_suggestion(user_login)
         
-
+        paginator = Paginator(data[::-1], 2)  # Reversed data & 2 items per page
+        page_number = request.GET.get('page', 1)
+        page = paginator.get_page(page_number)
 
         
         return render(request, 'home.html', {
             'profile_login': profile_login,
-            'zip_data': zip_data,
+            'data': page,
+            # 'page': page,
             'user_suggestion': user_suggestion[:4],
             'test': 'test',
         })
@@ -179,8 +188,15 @@ class Setting(LoginRequiredMixin, View):
             return JsonResponse({'error': 'ER'})
 
 
-class ProfileView(LoginRequiredMixin, View):
+class ProfileView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = 'signin'
+    permission_required = ['core.view_profile']
+
+    
+    def handle_no_permission(self):
+        response = JsonResponse({'error': "You don't have permission"}, status=403)
+        raise PermissionDenied(response)
+
 
     def get(self, request, username):
         user = get_object_or_404(User, username=username)
@@ -201,10 +217,6 @@ class ProfileView(LoginRequiredMixin, View):
         following = user.following.all()
         
 
-        # follow = Follow(user=user)
-        # ser = FollowSerializer(follow)
-
-        # breakpoint()
 
         return render(request, 'profile.html', {
             'profile': profile,
@@ -217,8 +229,35 @@ class ProfileView(LoginRequiredMixin, View):
         })
 
 
-class FollowView(LoginRequiredMixin, View):
+# Create profile for Oauth
+class SetProfile(LoginRequiredMixin, View):
+    login_url ='signin'
+
+    def get(self, request):
+        social_account = SocialAccount.objects.filter(user=request.user).first()
+        
+        try:
+            profile = Profile.objects.create(user=social_account.user)
+            profile.save()
+            return redirect("/setting/")
+        except:
+            return redirect("/")
+
+
+class FollowView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = 'signin'
+    permission_required = ['core.add_follow', 'core.delete_follow']
+
+    def has_permission(self):
+        if self.request.method == "GET":
+            return True
+        return super().has_permission()
+    
+
+    def handle_no_permission(self):
+        response = JsonResponse({'error': "You don't have permission"}, status=403)
+        raise PermissionDenied(response)
+
 
     def get(self, request):
         user_suggestion = get_user_suggestion(request.user)[:4]
@@ -229,6 +268,7 @@ class FollowView(LoginRequiredMixin, View):
             'user_suggestion': data[:4],
             'user_login': user_login,
         })
+
 
     def post(self, request):
         user = User.objects.get(id=request.POST['id_user_followed'])
@@ -261,7 +301,6 @@ class UploadPost(LoginRequiredMixin, PermissionRequiredMixin, APIView):
     permission_required = ['core.add_post']
 
     def handle_no_permission(self):
-        # Customize the behavior when the user doesn't have the required permission
         response = JsonResponse({'error': "You don't have permission"}, status=403)
         raise PermissionDenied(response)
 
@@ -294,8 +333,21 @@ class UploadPost(LoginRequiredMixin, PermissionRequiredMixin, APIView):
         
 
 
-class EditPost(LoginRequiredMixin, View):
+class EditPost(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = 'signin'
+    permission_required = ['core.change_post']
+
+
+    def has_permission(self):
+        if self.request.method == 'GET':
+            return True
+        return super().has_permission()
+    
+
+    def handle_no_permission(self):
+        response = JsonResponse({'error': "You don't have permission"}, status=403)
+        raise PermissionDenied(response)
+
 
     def get(self, request):
         id_post = request.GET['id_post']
@@ -308,6 +360,7 @@ class EditPost(LoginRequiredMixin, View):
             'title': post.title,
             'images_url': path_images,
         })
+
 
     def post(self, request):
         id_post = request.POST['id']
@@ -355,7 +408,14 @@ class DeletePost(LoginRequiredMixin, View):
             return JsonResponse({'is_deleted': False})
 
 
-class LikePost(LoginRequiredMixin, View):
+class LikePost(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = 'signin'
+    permission_required = ['core.add_likeofpost', 'core.delete_likeofpost']
+
+    def handle_no_permission(self):
+        response = JsonResponse({'error': 'You don\'t have permission'}, status=403)
+        raise PermissionDenied(response)
+
     def get(self, request):
         user_login = request.user
         id_post = request.GET['id_post']
@@ -381,8 +441,15 @@ class LikePost(LoginRequiredMixin, View):
             })
 
 
-class CommentPost(LoginRequiredMixin, View):
+# Create comment
+class CommentPost(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = 'signin'
+    permission_required = ['core.add_commentofpost']
+
+    def handle_no_permission(self):
+        response = JsonResponse({'error': "You don't have permission"}, status=403)
+        raise PermissionDenied(response)
+
 
     def post(self, request):
         
@@ -510,11 +577,13 @@ class Search(LoginRequiredMixin, View):
 
 
 
-class Test(LoginRequiredMixin, View):
+class Test(View):
     login_url = 'signin'
 
     def get(self, request):
-        breakpoint()
+        
+        return render(request, 'test.html')
+
 
     def post(self, request):
         pass

@@ -19,4 +19,8 @@ def has_permission(user, perm):
 def count_followers(user1):
     return user1.followers.all().count()
 
+@register.filter(name="type")
+def get_type(value):
+    return type(value)
+
 
