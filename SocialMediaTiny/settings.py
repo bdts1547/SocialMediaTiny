@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-l30f9*q^mipov_4$a$4z_+4!@78*b##98_1!6z3^w-+c%x+3bh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app']
+ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
 
 
 # Application definition
@@ -141,8 +141,12 @@ WSGI_APPLICATION = "SocialMediaTiny.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "railway",
+        "USER": "postgres",
+        "PASSWORD": "76TYuyxX9yGy2iPcsPfu",
+        "HOST": "containers-us-west-75.railway.app",
+        "PORT": "7761",
     }
 }
 
@@ -194,7 +198,7 @@ UPLOADED_FILES_USE_URL = True
 
 
 
-LOGIN_REDIRECT_URL = "/"
+
 LOGOUT_REDIRECT_URL = "signin"
 
 

@@ -142,9 +142,8 @@ class RegisterView(APIView):
             auth.login(request, user_login)
 
 
-            # Create profile
-            profile = Profile.objects.create(user=request.user)
-            profile.save()
+            
+           
         
             return JsonResponse({'redirect': True})
         else:
@@ -235,7 +234,7 @@ class SetProfile(LoginRequiredMixin, View):
 
     def get(self, request):
         social_account = SocialAccount.objects.filter(user=request.user).first()
-        
+       
         try:
             profile = Profile.objects.create(user=social_account.user)
             profile.save()
