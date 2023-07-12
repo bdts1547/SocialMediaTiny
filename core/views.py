@@ -142,10 +142,6 @@ class RegisterView(APIView):
             auth.login(request, user_login)
 
 
-            # Create profile
-            profile = Profile.objects.create(user=request.user)
-            profile.save()
-        
             return JsonResponse({'redirect': True})
         else:
             errors = dict(user_serializer.errors)

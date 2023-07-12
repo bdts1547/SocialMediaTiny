@@ -8,11 +8,17 @@ class CoreConfig(AppConfig):
     def ready(self):
         from django.contrib.auth.models import Group
         from django.db.models.signals import post_save
+        from .models import Profile
 
         def add_to_default_group(sender, **kwargs):
             user = kwargs['instance']
             if kwargs['created']:
                 group, ok = Group.objects.get_or_create(name='default')
                 group.user_set.add(user)
+
+                if not Profile.objects.filter(user=user).exists():
+                    profile = Profile.objects.create(user=user)
+                    profile.save()
+
 
         post_save.connect(add_to_default_group, sender=settings.AUTH_USER_MODEL)
