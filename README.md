@@ -1,4 +1,6 @@
-"# SocialMediaTiny" 
+# SocialMediaTiny
+
+# Description
 
 Features: Authentication (Login-Logout, User & Group Management), CRUD methods,
 Pagination, Search, Ban User.
