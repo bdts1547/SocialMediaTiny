@@ -3,4 +3,3 @@ django-allauth==0.54.0
 djangorestframework==3.14.0
 numpy==1.21.6
 Pyrebase4==4.7.1
-psycopg2
