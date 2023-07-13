@@ -34,16 +34,16 @@ SuperUserAccount:
 
 
 ## Todo List
+- [x] Authentication & Authorization (Login/Logout, Email OTP reset password, User & Group Management)
+- [x] OAuth with Google
 - [x] Register, Login, Logout
 - [x] Profile, Setting
-- [x] Upload and Get URL image from Firebase Storage
 - [x] Upload, Edit, Delete post
+- [x] Upload and Get URL image from Firebase Storage
 - [x] Comment, Like, Follow
-- [x] Ban & Unban User
 - [x] Pagination, Search
-- [x] OAuth with Google
+- [x] Ban & Unban User
 - [x] Submit without refresh page with AJAX
-- [x] Authentication & Authorization (Login/Logout, Email OTP reset password, User & Group Management)
 - [ ] Notification
 - [ ] Chat-realtime
 - [ ] PageGroup
