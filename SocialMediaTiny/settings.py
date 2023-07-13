@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-l30f9*q^mipov_4$a$4z_+4!@78*b##98_1!6z3^w-+c%x+3bh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -94,6 +94,9 @@ SOCIALACCOUNT_PROVIDERS = {
 SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_LOGOUT_ON_GET = True
 
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "449766835040-65m6a1e4gttjsr5r35rqffnmptfmuf09.apps.googleusercontent.com"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
