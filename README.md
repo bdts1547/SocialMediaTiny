@@ -48,6 +48,7 @@ SuperUserAccount:
 - [ ] Chat-realtime
 - [ ] PageGroup
 - [ ] Edit comment
+- [ ] Custom reset password admin-site
 
 
 
