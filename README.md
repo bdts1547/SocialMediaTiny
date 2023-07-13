@@ -1,17 +1,30 @@
 # SocialMediaTiny
 
 ## Installation
-**With Docker**
+**Docker**: require docker compose
 ```
-git clone
+git clone https://github.com/bdts1547/SocialMediaTiny.git
+docker-compose build
+docker-compose up
+```
+then go to: [localhost:8000](http://localhost:8000)
 
+**Window/Linux**: required python3.9
 ```
+git clone https://github.com/bdts1547/SocialMediaTiny.git
+pip install -r requirements.txt
+python manage.py runserver
+```
+
+SuperUserAccount: 
+- Username: dangnh
+- Password: 123
 
 ## Description
 ***A simple social network with features like:***
 
 - Authentication & Authorization: Login/Logout, Email OTP reset password, User & Group Management
-- CRUD methods: Upload, Edit, Delete post
+- CRUD methods: upload, edit, delete post, image, comments, like, follow
 - Pagination, Search
 - Ban/Unban User
 
@@ -20,7 +33,7 @@ git clone
 
 
 
-***Todo List***
+## Todo List
 - [x] Register, Login, Logout
 - [x] Profile, Setting
 - [x] Upload and Get URL image from Firebase Storage
@@ -34,7 +47,7 @@ git clone
 - [ ] Notification
 - [ ] Chat-realtime
 - [ ] PageGroup
-
+- [ ] Edit comment
 
 
 
