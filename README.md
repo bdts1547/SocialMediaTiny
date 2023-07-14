@@ -39,16 +39,17 @@ SuperUserAccount:
 - [x] Register, Login, Logout
 - [x] Profile, Setting
 - [x] Upload, Edit, Delete post
+- [ ] Upload video
 - [x] Upload and Get URL image from Firebase Storage
 - [x] Comment, Like, Follow
-- [x] Pagination, Search
+- [x] Pagination, Search, Infinity Scroll
 - [x] Ban & Unban User
 - [x] Submit without refresh page with AJAX
 - [ ] Notification
 - [ ] Chat-realtime
 - [ ] PageGroup
-- [ ] Edit comment
-- [ ] Custom reset password admin-site
+- [ ] Edit comment, Sub-comment, reply comment, comment image/video
+- [ ] Custom admin-site
 
 
 

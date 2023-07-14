@@ -32,15 +32,15 @@ class Profile(models.Model):
 
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=1000, default="")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+    title = models.CharField(max_length=100000, default="")
     created_at = models.DateTimeField(auto_now_add=True)
     no_of_likes = models.IntegerField(default=0)
     no_of_comments = models.IntegerField(default=0)
     is_enabled_comments = models.BooleanField(default=True)
 
     def __str__(self) -> str:
-        return self.title
+        return self.title[:25]
 
 
 class ImagesOfPost(models.Model):

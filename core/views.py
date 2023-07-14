@@ -52,7 +52,12 @@ class HomeView(LoginRequiredMixin, View):
     def get(self, request):
         user_login = request.user
         profile_login = Profile.objects.get(user=user_login)
-        list_posts = Post.objects.all()
+        queryset_user_following = user_login.following.all()
+        queryset_post_user = user_login.posts.all()
+        queryset_posts = [follow.user.posts.all() for follow in queryset_user_following]
+        list_posts = list(chain(*queryset_posts, queryset_post_user))
+        
+        list_posts = sorted(list_posts, key=lambda x: x.created_at, reverse=True)
 
 
         list_profiles, list_images = [], []
@@ -78,11 +83,11 @@ class HomeView(LoginRequiredMixin, View):
         data = data.T # Transpose matrix
         # User suggestion
         user_suggestion = get_user_suggestion(user_login)
-        
-        paginator = Paginator(data[::-1], 2)  # Reversed data & 2 items per page
+        paginator = Paginator(data, 2) 
         page_number = request.GET.get('page', 1)
         page = paginator.get_page(page_number)
 
+        
         
         return render(request, 'home.html', {
             'profile_login': profile_login,

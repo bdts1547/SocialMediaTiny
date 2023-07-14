@@ -18,7 +18,8 @@ class UserSerializer(serializers.ModelSerializer):
     count_following = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ('id', 'password', 'username', 'email', 'location', 'followers', 'image_path', 'count_following', 'count_followers')
+        fields = ('id', 'password', 'username', 'email', 'location', 'followers', 
+                'image_path', 'count_following', 'count_followers', 'posts')
         extra_kwargs = {
             'followers': {'required': False},
         }
