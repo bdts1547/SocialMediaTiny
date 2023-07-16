@@ -1,7 +1,7 @@
 # SocialMediaTiny
 
 ## Installation
-**Docker**: require docker compose
+**Docker**:
 ```
 git clone https://github.com/bdts1547/SocialMediaTiny.git
 docker-compose build
@@ -16,6 +16,10 @@ pip install -r requirements.txt
 python manage.py runserver
 ```
 
+**Test**
+- [x] Window OS
+- [x] Linux OS (Ubuntu 18.04)
+
 SuperUserAccount: 
 - Username: dangnh
 - Password: 123
@@ -23,8 +27,8 @@ SuperUserAccount:
 ## Description
 ***A simple social network with features like:***
 
-- Authentication & Authorization: Login/Logout, Email OTP reset password, User & Group Management
-- CRUD methods: upload, edit, delete post, image, comments, like, follow
+- Authentication & Authorization: Login/Logout (OAuth, Basic Auth), Email OTP reset password, User & Group Management
+- CRUD methods: post, comments, like, follow
 - Pagination, Search
 - Ban/Unban User
 
@@ -50,6 +54,7 @@ SuperUserAccount:
 - [ ] PageGroup
 - [ ] Edit comment, Sub-comment, reply comment, comment image/video
 - [ ] Custom admin-site
+- [ ] Build administatrion manager
 
 
 
